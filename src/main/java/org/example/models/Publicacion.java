@@ -13,11 +13,12 @@ public class Publicacion {
     private int id_vendedor;
     private float precio_producto;
     private Integer id_categoria;
+    private int existencia;
 
     public Publicacion() {
     }
 
-    public Publicacion(int id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, int id_vendedor, float precio_producto, Integer id_categoria) {
+    public Publicacion(int id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, int id_vendedor, float precio_producto, Integer id_categoria, int  existencia) {
         this.id_publicacion = id_publicacion;
         this.titulo_publicacion = titulo_publicacion;
         this.descripcion_publicacion = descripcion_publicacion;
@@ -28,6 +29,7 @@ public class Publicacion {
         this.id_vendedor = id_vendedor;
         this.precio_producto = precio_producto;
         this.id_categoria = id_categoria;
+        this.existencia = existencia;
     }
 
     public int getId_publicacion() {
@@ -108,5 +110,13 @@ public class Publicacion {
 
     public void setId_categoria(Integer id_categoria) {
         this.id_categoria = id_categoria;
+    }
+
+    public int getExistencia() {
+        return existencia;
+    }
+
+    public void setExistencia(int existencia) {
+        this.existencia = existencia;
     }
 }

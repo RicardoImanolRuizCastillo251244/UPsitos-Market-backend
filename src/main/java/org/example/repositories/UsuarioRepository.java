@@ -18,7 +18,7 @@ public class UsuarioRepository {
             pstmt.setInt(1, usuario.getId_rol());
             pstmt.setString(2, usuario.getNombre_usuario());
             pstmt.setString(3, usuario.getCorreo_usuario());
-            pstmt.setBytes(4, usuario.getContrasena());
+            pstmt.setString(4, usuario.getContrasena());
             pstmt.setBoolean(5, usuario.isActivo());
             pstmt.executeUpdate();
 
@@ -39,7 +39,7 @@ public class UsuarioRepository {
             pstmt.setInt(1, usuario.getId_rol());
             pstmt.setString(2, usuario.getNombre_usuario());
             pstmt.setString(3, usuario.getCorreo_usuario());
-            pstmt.setBytes(4, usuario.getContrasena());
+            pstmt.setString(4, usuario.getContrasena());
             pstmt.setBoolean(5, usuario.isActivo());
             pstmt.setInt(6, usuario.getId_usuario());
             pstmt.executeUpdate();
@@ -145,7 +145,7 @@ public class UsuarioRepository {
                 rs.getInt("id_rol"),
                 rs.getString("nombre_usuario"),
                 rs.getString("correo_usuario"),
-                rs.getBytes("contrasena"),
+                rs.getString("contrasena"),
                 rs.getBoolean("activo"),
                 rs.getTimestamp("creado_en").toLocalDateTime(),
                 actualizadoEnTimestamp != null ? actualizadoEnTimestamp.toLocalDateTime() : null

@@ -77,8 +77,9 @@ public class UsuarioController {
             LoginDTO loginData = ctx.bodyAsClass(LoginDTO.class);
             Usuario usuario = usuarioService.loginUsuario(loginData.getCorreo_usuario(), loginData.getContrasena());
             String token = tokenManager.issueToken(String.valueOf(usuario.getId_usuario()));
+            int id_rol = usuario.getId_rol();
 
-            ctx.status(200).json(Map.of("token", token, "userId", usuario.getId_usuario()));
+            ctx.status(200).json(Map.of("token", token,"id_rol", id_rol  , "userId", usuario.getId_usuario()));
         } catch (LoginException e) {
             ctx.status(401).result(e.getMessage()); // 401 Unauthorized
         } catch (Exception e) {

@@ -4,6 +4,7 @@ public class LoginDTO {
     private String correo_usuario;
     private String contrasena;
 
+
     public String getCorreo_usuario() {
         return correo_usuario;
     }
