@@ -3,21 +3,21 @@ package org.example.models;
 import java.time.LocalDateTime;
 
 public class Publicacion {
-    private int id_publicacion;
+    private Integer id_publicacion;
     private String titulo_publicacion;
     private String descripcion_publicacion;
     private byte[] foto_publicacion;
     private LocalDateTime fecha_publicacion;
     private LocalDateTime fecha_expiracion;
     private String estado_publicacion;
-    private int id_vendedor;
-    private float precio_producto;
+    private Integer id_vendedor;
+    private Float precio_producto;
     private Integer id_categoria;
-    private int existencia;
+    private Integer existencia;
 
     public Publicacion() {
     }
-    public Publicacion(int id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, int id_vendedor, float precio_producto, Integer id_categoria) {
+    public Publicacion(Integer id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, Integer id_vendedor, Float precio_producto, Integer id_categoria) {
         this.id_publicacion = id_publicacion;
         this.titulo_publicacion = titulo_publicacion;
         this.descripcion_publicacion = descripcion_publicacion;
@@ -30,11 +30,11 @@ public class Publicacion {
         this.id_categoria = id_categoria;
     }
 
-    public int getId_publicacion() {
+    public Integer getId_publicacion() {
         return id_publicacion;
     }
 
-    public void setId_publicacion(int id_publicacion) {
+    public void setId_publicacion(Integer id_publicacion) {
         this.id_publicacion = id_publicacion;
     }
 
@@ -86,19 +86,19 @@ public class Publicacion {
         this.estado_publicacion = estado_publicacion;
     }
 
-    public int getId_vendedor() {
+    public Integer getId_vendedor() {
         return id_vendedor;
     }
 
-    public void setId_vendedor(int id_vendedor) {
+    public void setId_vendedor(Integer id_vendedor) {
         this.id_vendedor = id_vendedor;
     }
 
-    public float getPrecio_producto() {
+    public Float getPrecio_producto() {
         return precio_producto;
     }
 
-    public void setPrecio_producto(float precio_producto) {
+    public void setPrecio_producto(Float precio_producto) {
         this.precio_producto = precio_producto;
     }
 
@@ -110,11 +110,11 @@ public class Publicacion {
         this.id_categoria = id_categoria;
     }
 
-    public int getExistencia() {
+    public Integer getExistencia() {
         return existencia;
     }
 
-    public void setExistencia(int existencia) {
+    public void setExistencia(Integer existencia) {
         this.existencia = existencia;
     }
 }

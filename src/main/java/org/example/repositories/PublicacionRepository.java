@@ -39,10 +39,18 @@ public class PublicacionRepository {
             }
 
             // id_vendedor -> posicion 5
-            pstmt.setInt(5, pub.getId_vendedor());
+            if (pub.getId_vendedor() != null) {
+                pstmt.setInt(5, pub.getId_vendedor());
+            } else {
+                pstmt.setNull(5, Types.INTEGER);
+            }
 
             // precio_producto -> posicion 6
-            pstmt.setFloat(6, pub.getPrecio_producto());
+            if (pub.getPrecio_producto() != null) {
+                pstmt.setFloat(6, pub.getPrecio_producto());
+            } else {
+                pstmt.setNull(6, Types.FLOAT);
+            }
 
             // id_categoria -> posicion 7 (puede ser null)
             if (pub.getId_categoria() != null) {
@@ -68,16 +76,32 @@ public class PublicacionRepository {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, pub.getTitulo_publicacion());
             pstmt.setString(2, pub.getDescripcion_publicacion());
-            pstmt.setBytes(3, pub.getFoto_publicacion());
-            pstmt.setTimestamp(4, Timestamp.valueOf(pub.getFecha_expiracion()));
+            if (pub.getFoto_publicacion() != null) {
+                pstmt.setBytes(3, pub.getFoto_publicacion());
+            } else {
+                pstmt.setNull(3, Types.BINARY);
+            }
+            if (pub.getFecha_expiracion() != null) {
+                pstmt.setTimestamp(4, Timestamp.valueOf(pub.getFecha_expiracion()));
+            } else {
+                pstmt.setNull(4, Types.TIMESTAMP);
+            }
             pstmt.setString(5, pub.getEstado_publicacion());
-            pstmt.setFloat(6, pub.getPrecio_producto());
+            if (pub.getPrecio_producto() != null) {
+                pstmt.setFloat(6, pub.getPrecio_producto());
+            } else {
+                pstmt.setNull(6, Types.FLOAT);
+            }
             if (pub.getId_categoria() != null) {
                 pstmt.setInt(7, pub.getId_categoria());
             } else {
                 pstmt.setNull(7, Types.INTEGER);
             }
-            pstmt.setInt(8, pub.getId_publicacion());
+            if (pub.getId_publicacion() != null) {
+                pstmt.setInt(8, pub.getId_publicacion());
+            } else {
+                pstmt.setNull(8, Types.INTEGER);
+            }
             pstmt.executeUpdate();
         }
     }
@@ -217,17 +241,30 @@ public class PublicacionRepository {
     private Publicacion mapRowToPublicacion(ResultSet rs) throws SQLException {
         Timestamp fechaPub = rs.getTimestamp("fecha_publicacion");
         Timestamp fechaExp = rs.getTimestamp("fecha_expiracion");
+
+        Integer id_publicacion = rs.getObject("id_publicacion") != null ? rs.getInt("id_publicacion") : null;
+        String titulo = rs.getString("titulo_publicacion");
+        String descripcion = rs.getString("descripcion_publicacion");
+        byte[] foto = rs.getBytes("foto_publicacion");
+        LocalDateTime fecha_publicacion = fechaPub != null ? fechaPub.toLocalDateTime() : null;
+        LocalDateTime fecha_expiracion = fechaExp != null ? fechaExp.toLocalDateTime() : null;
+        String estado = rs.getString("estado_publicacion");
+        Integer id_vendedor = rs.getObject("id_vendedor") != null ? rs.getInt("id_vendedor") : null;
+        Object precioObj = rs.getObject("precio_producto");
+        Float precio = precioObj != null ? ((Number) precioObj).floatValue() : null;
+        Integer id_categoria = (Integer) rs.getObject("id_categoria");
+
         return new Publicacion(
-                rs.getInt("id_publicacion"),
-                rs.getString("titulo_publicacion"),
-                rs.getString("descripcion_publicacion"),
-                rs.getBytes("foto_publicacion"),
-                fechaPub != null ? fechaPub.toLocalDateTime() : null,
-                fechaExp != null ? fechaExp.toLocalDateTime() : null,
-                rs.getString("estado_publicacion"),
-                rs.getInt("id_vendedor"),
-                rs.getFloat("precio_producto"),
-                (Integer) rs.getObject("id_categoria")
+            id_publicacion,
+            titulo,
+            descripcion,
+            foto,
+            fecha_publicacion,
+            fecha_expiracion,
+            estado,
+            id_vendedor,
+            precio,
+            id_categoria
         );
     }
 }
