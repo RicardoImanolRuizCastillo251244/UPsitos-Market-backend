@@ -1,13 +1,19 @@
 package org.example.repositories;
 
-import org.example.config.ConfigDB;
-import org.example.models.Publicacion;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.example.config.ConfigDB;
+import org.example.models.Publicacion;
 
 public class PublicacionRepository {
 
@@ -18,15 +24,33 @@ public class PublicacionRepository {
 
             pstmt.setString(1, pub.getTitulo_publicacion());
             pstmt.setString(2, pub.getDescripcion_publicacion());
-            pstmt.setBytes(3, pub.getFoto_publicacion());
-            pstmt.setString(6, pub.getEstado_publicacion());
-            pstmt.setInt(7, pub.getId_vendedor());
-            pstmt.setFloat(8, pub.getPrecio_producto());
-            if (pub.getId_categoria() != null) {
-                pstmt.setInt(9, pub.getId_categoria());
+
+            if (pub.getFoto_publicacion() != null) {
+                pstmt.setBytes(3, pub.getFoto_publicacion());
             } else {
-                pstmt.setNull(9, Types.INTEGER);
+                pstmt.setNull(3, Types.BINARY);
             }
+
+            // estado -> posicion 4
+            if (pub.getEstado_publicacion() != null) {
+                pstmt.setString(4, pub.getEstado_publicacion());
+            } else {
+                pstmt.setString(4, "ACTIVA");
+            }
+
+            // id_vendedor -> posicion 5
+            pstmt.setInt(5, pub.getId_vendedor());
+
+            // precio_producto -> posicion 6
+            pstmt.setFloat(6, pub.getPrecio_producto());
+
+            // id_categoria -> posicion 7 (puede ser null)
+            if (pub.getId_categoria() != null) {
+                pstmt.setInt(7, pub.getId_categoria());
+            } else {
+                pstmt.setNull(7, Types.INTEGER);
+            }
+
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
