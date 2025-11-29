@@ -21,43 +21,38 @@ public class PublicacionController {
         try {
             // Crear objeto Publicacion manualmente desde form params
             Publicacion publicacion = new Publicacion();
-            publicacion.setTitulo_publicacion(ctx.formParam("titulo_publicacion"));
-            publicacion.setDescripcion_publicacion(ctx.formParam("descripcion_publicacion"));
-            publicacion.setId_vendedor(Integer.parseInt(ctx.formParam("id_vendedor")));
-            publicacion.setPrecio_producto(Float.parseFloat(ctx.formParam("precio_producto")));
 
-            // Parsear fecha de expiración
-            String fechaExpiracionStr = ctx.formParam("fecha_expiracion");
-            if (fechaExpiracionStr != null && !fechaExpiracionStr.isEmpty()) {
-                publicacion.setFecha_expiracion(LocalDateTime.parse(fechaExpiracionStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            // Validar y obtener `titulo_publicacion`
+            String titulo = ctx.formParam("titulo_publicacion");
+            System.out.println(ctx.formParam("titulo_publicacion"));
+            if (titulo == null || titulo.isEmpty()) {
+                ctx.status(400).result("El título de la publicación no puede ser nulo o vacío.");
+                return;
             }
+            publicacion.setTitulo_publicacion(titulo);
 
-            // Parsear id_categoria opcional
-            String idCategoriaStr = ctx.formParam("id_categoria");
-            if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
-                publicacion.setId_categoria(Integer.parseInt(idCategoriaStr));
+            // Validar y obtener `descripcion_publicacion`
+            String descripcion = ctx.formParam("descripcion_publicacion");
+            publicacion.setDescripcion_publicacion(descripcion);
+
+            // Validar y obtener `id_vendedor`
+            String idVendedorStr = ctx.formParam("id_vendedor");
+            if (idVendedorStr == null || idVendedorStr.isEmpty()) {
+                ctx.status(400).result("El ID del vendedor no puede ser nulo o vacío.");
+                return;
             }
+            publicacion.setId_vendedor(Integer.parseInt(idVendedorStr));
 
-            // Manejo de la imagen opcional
-            UploadedFile uploadedFile = ctx.uploadedFile("foto_publicacion");
-            if (uploadedFile != null) {
-                // Validar tipo MIME
-                String contentType = uploadedFile.contentType();
-                if (contentType == null || !contentType.startsWith("image/")) {
-                    ctx.status(400).result("El archivo debe ser una imagen.");
-                    return;
-                }
-                // Validar tamaño máximo (5MB)
-                byte[] imagenBytes = uploadedFile.content().readAllBytes();
-                if (imagenBytes.length > 5 * 1024 * 1024) {
-                    ctx.status(400).result("La imagen no debe superar los 5MB.");
-                    return;
-                }
-                publicacion.setFoto_publicacion(imagenBytes);
+            // Validar y obtener `precio_producto`
+            String precioStr = ctx.formParam("precio_producto");
+            if (precioStr == null || precioStr.isEmpty()) {
+                ctx.status(400).result("El precio del producto no puede ser nulo o vacío.");
+                return;
             }
+            publicacion.setPrecio_producto(Float.parseFloat(precioStr));
 
-            Publicacion savedPublicacion = publicacionService.savePublicacion(publicacion);
-            ctx.status(201).json(savedPublicacion);
+            // Resto del código...
+
         } catch (NumberFormatException e) {
             ctx.status(400).result("Error de formato en uno de los campos numéricos: " + e.getMessage());
         } catch (IllegalArgumentException e) {

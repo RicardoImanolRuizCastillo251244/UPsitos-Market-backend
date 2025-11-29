@@ -17,8 +17,7 @@ public class Publicacion {
 
     public Publicacion() {
     }
-
-    public Publicacion(int id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, int id_vendedor, float precio_producto, Integer id_categoria, int  existencia) {
+    public Publicacion(int id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, int id_vendedor, float precio_producto, Integer id_categoria) {
         this.id_publicacion = id_publicacion;
         this.titulo_publicacion = titulo_publicacion;
         this.descripcion_publicacion = descripcion_publicacion;
@@ -29,7 +28,6 @@ public class Publicacion {
         this.id_vendedor = id_vendedor;
         this.precio_producto = precio_producto;
         this.id_categoria = id_categoria;
-        this.existencia = existencia;
     }
 
     public int getId_publicacion() {

@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UsuarioRepository {
 
     public Usuario save(Usuario usuario) throws SQLException {
-        String sql = "INSERT INTO USUARIO (id_rol, nombre_usuario, correo_usuario, contrasena, activo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO USUARIO (id_rol, nombre_usuario, correo_usuario, contrasena, activo, titular_cuenta, numero_cuenta) VALUES (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -20,6 +20,8 @@ public class UsuarioRepository {
             pstmt.setString(3, usuario.getCorreo_usuario());
             pstmt.setString(4, usuario.getContrasena());
             pstmt.setBoolean(5, usuario.isActivo());
+            pstmt.setString(6,usuario.getTitular_usuario());
+            pstmt.setString(7, usuario.getNumero_cuenta());
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -148,7 +150,9 @@ public class UsuarioRepository {
                 rs.getString("contrasena"),
                 rs.getBoolean("activo"),
                 rs.getTimestamp("creado_en").toLocalDateTime(),
-                actualizadoEnTimestamp != null ? actualizadoEnTimestamp.toLocalDateTime() : null
+                actualizadoEnTimestamp != null ? actualizadoEnTimestamp.toLocalDateTime() : null,
+                rs.getString("titular_cuenta"),
+                rs.getString("numero_cuenta")
         );
     }
 }

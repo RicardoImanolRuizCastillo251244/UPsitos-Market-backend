@@ -12,24 +12,20 @@ import java.util.Optional;
 public class PublicacionRepository {
 
     public Publicacion save(Publicacion pub) throws SQLException {
-        String sql = "INSERT INTO PUBLICACION (titulo_publicacion, descripcion_publicacion, foto_publicacion, fecha_expiracion, id_vendedor, precio_producto, id_categoria) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into publicacion (titulo_publicacion, descripcion_publicacion, foto_publicacion, estado_publicacion, id_vendedor, precio_producto, id_categoria) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, pub.getTitulo_publicacion());
             pstmt.setString(2, pub.getDescripcion_publicacion());
             pstmt.setBytes(3, pub.getFoto_publicacion());
-            if (pub.getFecha_expiracion() != null) {
-                pstmt.setTimestamp(4, Timestamp.valueOf(pub.getFecha_expiracion()));
-            } else {
-                pstmt.setNull(4, Types.TIMESTAMP);
-            }
-            pstmt.setInt(5, pub.getId_vendedor());
-            pstmt.setFloat(6, pub.getPrecio_producto());
+            pstmt.setString(6, pub.getEstado_publicacion());
+            pstmt.setInt(7, pub.getId_vendedor());
+            pstmt.setFloat(8, pub.getPrecio_producto());
             if (pub.getId_categoria() != null) {
-                pstmt.setInt(7, pub.getId_categoria());
+                pstmt.setInt(9, pub.getId_categoria());
             } else {
-                pstmt.setNull(7, Types.INTEGER);
+                pstmt.setNull(9, Types.INTEGER);
             }
             pstmt.executeUpdate();
 
