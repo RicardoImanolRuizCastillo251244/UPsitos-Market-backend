@@ -89,11 +89,13 @@ public class VentaController {
     public void getVentaById(Context ctx) {
         try {
             int id = ctx.pathParamAsClass("id", Integer.class).get();
-            ventaService.findById(id)
-                    .ifPresentOrElse(
-                            venta -> ctx.status(200).json(venta),
-                            () -> ctx.status(404).result("Venta no encontrada.")
-                    );
+            Venta venta = ventaService.findById(id).orElse(null);
+            if(venta == null){
+                ctx.status(404).result("El venta no existe");
+            }
+            else {
+                ctx.status(200).json(venta);
+            }
         } catch (IllegalArgumentException e) {
             ctx.status(400).result("ID de venta inválido.");
         } catch (Exception e) {
@@ -106,6 +108,15 @@ public class VentaController {
             ctx.status(200).json(ventaService.findAll());
         } catch (Exception e) {
             ctx.status(500).result("Error al obtener las ventas: " + e.getMessage());
+        }
+    }
+
+    public void getAllCompras(Context ctx) {
+        try {
+            int id =  ctx.pathParamAsClass("id", Integer.class).get();
+            ctx.status(200).json(ventaService.findAllCompras(id));
+        } catch (Exception e) {
+            ctx.status(500).result("Error al obtener las compras: " + e.getMessage());
         }
     }
 }

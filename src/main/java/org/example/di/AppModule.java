@@ -1,54 +1,10 @@
 package org.example.di;
 
-import org.example.controllers.CalificacionController;
+import org.example.controllers.*;
 import org.example.config.TokenManager;
-import org.example.controllers.CategoriaController;
-import org.example.controllers.MembresiaTipoController;
-import org.example.controllers.NotificacionController;
-import org.example.controllers.PublicacionController;
-import org.example.controllers.QuejaUsuarioController;
-import org.example.controllers.QuejaVentaController;
-import org.example.controllers.RolController;
-import org.example.controllers.UsuarioController;
-import org.example.controllers.UsuarioMembresiaController;
-import org.example.controllers.UsuarioBaneadoController;
-import org.example.controllers.VentaController;
-import org.example.repositories.CalificacionRepository;
-import org.example.repositories.CategoriaRepository;
-import org.example.repositories.MembresiaTipoRepository;
-import org.example.repositories.NotificacionRepository;
-import org.example.repositories.PublicacionRepository;
-import org.example.repositories.QuejaUsuarioRepository;
-import org.example.repositories.QuejaVentaRepository;
-import org.example.repositories.RolRepository;
-import org.example.repositories.UsuarioRepository;
-import org.example.repositories.UsuarioMembresiaRepository;
-import org.example.repositories.UsuarioBaneadoRepository;
-import org.example.repositories.VentaRepository;
-import org.example.routers.CalificacionRouter;
-import org.example.routers.CategoriaRouter;
-import org.example.routers.MembresiaTipoRouter;
-import org.example.routers.NotificacionRouter;
-import org.example.routers.PublicacionRouter;
-import org.example.routers.QuejaUsuarioRouter;
-import org.example.routers.QuejaVentaRouter;
-import org.example.routers.RolRouter;
-import org.example.routers.UsuarioRouter;
-import org.example.routers.UsuarioMembresiaRouter;
-import org.example.routers.UsuarioBaneadoRouter;
-import org.example.routers.VentaRouter;
-import org.example.services.CalificacionService;
-import org.example.services.CategoriaService;
-import org.example.services.MembresiaTipoService;
-import org.example.services.NotificacionService;
-import org.example.services.PublicacionService;
-import org.example.services.QuejaUsuarioService;
-import org.example.services.QuejaVentaService;
-import org.example.services.RolService;
-import org.example.services.UsuarioService;
-import org.example.services.UsuarioMembresiaService;
-import org.example.services.UsuarioBaneadoService;
-import org.example.services.VentaService;
+import org.example.repositories.*;
+import org.example.routers.*;
+import org.example.services.*;
 
 public class AppModule {
 
@@ -140,5 +96,13 @@ public class AppModule {
         QuejaVentaService quejaVentaService = new QuejaVentaService(quejaVentaRepository, ventaRepository, publicacionRepository);
         QuejaVentaController quejaVentaController = new QuejaVentaController(quejaVentaService);
         return new QuejaVentaRouter(quejaVentaController);
+    }
+
+    public static HoraEntregaRouter initHoraEntrega() {
+        HoraEntregaRepository horaEntregaRepository = new HoraEntregaRepository();
+        HoraEntregaService horaEntregaService = new HoraEntregaService(horaEntregaRepository);
+        HoraEntregaController horaEntregaController  = new HoraEntregaController(horaEntregaService);
+        HoraEntregaRouter horaEntregaRouter  = new HoraEntregaRouter(horaEntregaController);
+        return horaEntregaRouter;
     }
 }

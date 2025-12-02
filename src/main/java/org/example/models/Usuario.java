@@ -11,11 +11,13 @@ public class Usuario {
     private boolean activo;
     private LocalDateTime creado_en;
     private LocalDateTime actualizado_en;
+    private String clabe_bancaria;
+    private String titular_bancario;
 
     public Usuario() {
     }
 
-    public Usuario(int id_usuario, int id_rol, String nombre_usuario, String correo_usuario, byte[] contrasena, boolean activo, LocalDateTime creado_en, LocalDateTime actualizado_en) {
+    public Usuario(int id_usuario, int id_rol, String nombre_usuario, String correo_usuario, byte[] contrasena, boolean activo, LocalDateTime creado_en, LocalDateTime actualizado_en,  String clabe_bancaria, String titular_bancario) {
         this.id_usuario = id_usuario;
         this.id_rol = id_rol;
         this.nombre_usuario = nombre_usuario;
@@ -24,6 +26,8 @@ public class Usuario {
         this.activo = activo;
         this.creado_en = creado_en;
         this.actualizado_en = actualizado_en;
+        this.clabe_bancaria = clabe_bancaria;
+        this.titular_bancario = titular_bancario;
     }
 
     public int getId_usuario() {
@@ -88,6 +92,22 @@ public class Usuario {
 
     public void setActualizado_en(LocalDateTime actualizado_en) {
         this.actualizado_en = actualizado_en;
+    }
+
+    public String getClabe_bancaria() {
+        return clabe_bancaria;
+    }
+
+    public void setClabe_bancaria(String clabe_bancaria) {
+        this.clabe_bancaria = clabe_bancaria;
+    }
+
+    public String getTitular_bancario() {
+        return titular_bancario;
+    }
+
+    public void setTitular_bancario(String titular_bancario) {
+        this.titular_bancario = titular_bancario;
     }
 
     @Override

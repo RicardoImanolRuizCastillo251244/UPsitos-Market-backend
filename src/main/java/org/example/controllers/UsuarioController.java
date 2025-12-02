@@ -22,6 +22,8 @@ public class UsuarioController {
         try {
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
             String plainPassword = ctx.queryParam("password");
+            int rol = usuario.getId_rol();
+            System.out.println(rol);
             Usuario savedUsuario = usuarioService.registerUsuario(usuario, plainPassword);
 
             ctx.status(201).json(Map.of("message", "Usuario registrado con éxito.", "userId", savedUsuario.getId_usuario()));
@@ -78,7 +80,7 @@ public class UsuarioController {
             Usuario usuario = usuarioService.loginUsuario(loginData.getCorreo_usuario(), loginData.getContrasena());
             String token = tokenManager.issueToken(String.valueOf(usuario.getId_usuario()));
 
-            ctx.status(200).json(Map.of("token", token, "userId", usuario.getId_usuario()));
+            ctx.status(200).json(Map.of("token", token, "userId", usuario.getId_usuario(), "rol", usuario.getId_rol()));
         } catch (LoginException e) {
             ctx.status(401).result(e.getMessage()); // 401 Unauthorized
         } catch (Exception e) {

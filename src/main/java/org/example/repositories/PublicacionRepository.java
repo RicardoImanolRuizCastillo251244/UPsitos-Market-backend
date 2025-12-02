@@ -12,7 +12,7 @@ import java.util.Optional;
 public class PublicacionRepository {
 
     public Publicacion save(Publicacion pub) throws SQLException {
-        String sql = "INSERT INTO PUBLICACION (titulo_publicacion, descripcion_publicacion, foto_publicacion, fecha_expiracion, id_vendedor, precio_producto, id_categoria) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO PUBLICACION (titulo_publicacion, descripcion_publicacion, foto_publicacion, fecha_expiracion, id_vendedor, precio_producto, id_categoria, existencia_publicacion) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -26,11 +26,12 @@ public class PublicacionRepository {
             }
             pstmt.setInt(5, pub.getId_vendedor());
             pstmt.setFloat(6, pub.getPrecio_producto());
-            if (pub.getId_categoria() != null) {
+            if (pub.getId_categoria() != 0) {
                 pstmt.setInt(7, pub.getId_categoria());
             } else {
                 pstmt.setNull(7, Types.INTEGER);
             }
+            pstmt.setInt(8, pub.getExistencia_publicacion());
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -43,7 +44,7 @@ public class PublicacionRepository {
     }
 
     public void update(Publicacion pub) throws SQLException {
-        String sql = "UPDATE PUBLICACION SET titulo_publicacion = ?, descripcion_publicacion = ?, foto_publicacion = ?, fecha_expiracion = ?, estado_publicacion = ?, precio_producto = ?, id_categoria = ? WHERE id_publicacion = ?";
+        String sql = "UPDATE PUBLICACION SET titulo_publicacion = ?, descripcion_publicacion = ?, foto_publicacion = ?, fecha_expiracion = ?, estado_publicacion = ?, precio_producto = ?, id_categoria = ?, existencia_publicacion = ? WHERE id_publicacion = ?";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, pub.getTitulo_publicacion());
@@ -52,12 +53,13 @@ public class PublicacionRepository {
             pstmt.setTimestamp(4, Timestamp.valueOf(pub.getFecha_expiracion()));
             pstmt.setString(5, pub.getEstado_publicacion());
             pstmt.setFloat(6, pub.getPrecio_producto());
-            if (pub.getId_categoria() != null) {
+            if (pub.getId_categoria() != 0) {
                 pstmt.setInt(7, pub.getId_categoria());
             } else {
                 pstmt.setNull(7, Types.INTEGER);
             }
             pstmt.setInt(8, pub.getId_publicacion());
+            pstmt.setInt(9, pub.getExistencia_publicacion());
             pstmt.executeUpdate();
         }
     }
@@ -207,7 +209,8 @@ public class PublicacionRepository {
                 rs.getString("estado_publicacion"),
                 rs.getInt("id_vendedor"),
                 rs.getFloat("precio_producto"),
-                (Integer) rs.getObject("id_categoria")
+                rs.getInt("id_categoria"),
+                rs.getInt("existencia_publicacion")
         );
     }
 }

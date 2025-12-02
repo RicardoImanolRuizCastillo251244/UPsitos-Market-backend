@@ -5,6 +5,7 @@ import io.javalin.http.UploadedFile;
 import org.example.models.Publicacion;
 import org.example.services.PublicacionService;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,29 +33,35 @@ public class PublicacionController {
                 publicacion.setFecha_expiracion(LocalDateTime.parse(fechaExpiracionStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
             }
 
-            // Parsear id_categoria opcional
-            String idCategoriaStr = ctx.formParam("id_categoria");
-            if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
-                publicacion.setId_categoria(Integer.parseInt(idCategoriaStr));
-            }
+            publicacion.setId_categoria(Integer.parseInt(ctx.formParam("id_categoria")));
 
             // Manejo de la imagen opcional
             UploadedFile uploadedFile = ctx.uploadedFile("foto_publicacion");
             if (uploadedFile != null) {
+
                 // Validar tipo MIME
                 String contentType = uploadedFile.contentType();
                 if (contentType == null || !contentType.startsWith("image/")) {
                     ctx.status(400).result("El archivo debe ser una imagen.");
                     return;
                 }
+
+                // Leer el InputStream SIEMPRE dentro de un try-with-resources
+                byte[] imagenBytes;
+                try (InputStream is = uploadedFile.content()) {
+                    imagenBytes = is.readAllBytes();
+                }
+
                 // Validar tamaño máximo (5MB)
-                byte[] imagenBytes = uploadedFile.content().readAllBytes();
                 if (imagenBytes.length > 5 * 1024 * 1024) {
                     ctx.status(400).result("La imagen no debe superar los 5MB.");
                     return;
                 }
+
                 publicacion.setFoto_publicacion(imagenBytes);
             }
+
+            publicacion.setExistencia_publicacion(Integer.parseInt(ctx.formParam("existencia")));
 
             Publicacion savedPublicacion = publicacionService.savePublicacion(publicacion);
             ctx.status(201).json(savedPublicacion);
