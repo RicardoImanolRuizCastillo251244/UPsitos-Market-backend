@@ -4,6 +4,9 @@ import io.javalin.http.Context;
 import org.example.models.Calificacion;
 import org.example.services.CalificacionService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CalificacionController {
     private final CalificacionService calificacionService;
 
@@ -81,13 +84,13 @@ public class CalificacionController {
     }
 
     public void getAverageRating(Context ctx) {
+        System.out.println("Path params: " + ctx.pathParamMap());
         try {
             int idPublicacion = parseId(ctx.pathParam("id_publicacion"));
-            calificacionService.getAverageRatingByPublicationId(idPublicacion)
-                    .ifPresentOrElse(
-                            avg -> ctx.status(200).json(java.util.Collections.singletonMap("average", avg)),
-                            () -> ctx.status(404).result("No se encontraron calificaciones para esta publicación o la publicación no existe.")
-                    );
+            Float promedio = calificacionService.getAverageRatingByPublicationId(idPublicacion).orElse(null);
+            Map<String, Object> json = new HashMap<>();
+            json.put("promedio", promedio);
+            ctx.status(200).json(json);
         } catch (IllegalArgumentException e) {
             ctx.status(400).result(e.getMessage());
         } catch (Exception e) {

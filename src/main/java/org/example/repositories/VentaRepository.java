@@ -73,6 +73,7 @@ public class VentaRepository {
         return Optional.empty();
     }
 
+
     public List<Venta> findAll() throws SQLException {
         List<Venta> ventas = new ArrayList<>();
         String sql = "SELECT * FROM VENTA";
