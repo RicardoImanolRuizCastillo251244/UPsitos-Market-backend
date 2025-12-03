@@ -12,7 +12,7 @@ public class HoraEntregaRepository {
 
     public void save(int idUsuario, int idHorario) throws SQLException {
 
-        String sql = "INSERT INTO vendedor_horarios (vendedor_id, horario_id) VALUES (?, ?)";
+        String sql = "INSERT INTO VENDEDOR_HORARIOS (vendedor_id, horario_id) VALUES (?, ?)";
 
         try (Connection conn = ConfigDB.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -23,7 +23,7 @@ public class HoraEntregaRepository {
     }
 
     public void delete(int id_horario) throws Exception {
-        String sql = "DELETE FROM vendedor_horarios WHERE horario_id = ?";
+        String sql = "DELETE FROM VENDEDOR_HORARIOS WHERE horario_id = ?";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id_horario);
@@ -33,7 +33,7 @@ public class HoraEntregaRepository {
 
     public List<HoraEntrega> findAll() throws SQLException {
         List<HoraEntrega> horaEntregas = new ArrayList<>();
-        String sql = "SELECT * FROM horarios";
+        String sql = "SELECT * FROM HORARIO";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -52,9 +52,9 @@ public class HoraEntregaRepository {
                     v.id_usuario,
                     h.hora,
                     h.id
-                    FROM vendedor_horarios vh
-                    inner join usuario v on vh.vendedor_id = v.id_usuario
-                    inner JOIN horarios h
+                    FROM VENDEDOR_HORARIOS vh
+                    inner join USUARIO v on vh.vendedor_id = v.id_usuario
+                    inner JOIN HORARIO h
                     ON vh.horario_id = h.id where v.id_usuario=?;
                     """;
 
