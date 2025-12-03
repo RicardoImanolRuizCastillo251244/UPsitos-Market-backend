@@ -1,7 +1,8 @@
 package org.example.routers;
 
-import io.javalin.Javalin;
 import org.example.controllers.UsuarioMembresiaController;
+
+import io.javalin.Javalin;
 
 public class UsuarioMembresiaRouter {
     private final UsuarioMembresiaController umController;
