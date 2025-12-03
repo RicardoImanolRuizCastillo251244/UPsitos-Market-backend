@@ -117,7 +117,7 @@ public class UsuarioService {
     public List<Usuario> findAll() throws Exception {
         return usuarioRepository.findAll();
     }
-    public void updateUsuarioParcial(int idUsuarioObjetivo, UpdateUsuarioDTO dto, int idRolSolicitante) throws Exception {
+    public void updateUsuarioParcial(int idUsuarioObjetivo, UpdateUsuarioDTO dto) throws Exception {
         Usuario usuario = usuarioRepository.findById(idUsuarioObjetivo)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
 
@@ -147,10 +147,11 @@ public class UsuarioService {
         }
 
         if (dto.getId_rol() != null && dto.getId_rol() > 0) {
-            if (idRolSolicitante == 3) { // Asumiendo que 3 es ADMIN
-                usuario.setId_rol(dto.getId_rol());
-            } else {
-            }
+            usuario.setId_rol(dto.getId_rol());
+        }
+
+        if (dto.isActivo() != null) {
+            usuario.setActivo(dto.isActivo());
         }
 
         usuarioRepository.update(usuario);

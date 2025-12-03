@@ -7,6 +7,7 @@ public class UpdateUsuarioDTO {
     private String titular_usuario;
     private String contrasena;
     private Integer id_rol;
+    private Boolean activo;
 
     // Getters y Setters
     public String getNombre_usuario() { return nombre_usuario; }
@@ -26,4 +27,7 @@ public class UpdateUsuarioDTO {
 
     public Integer getId_rol() { return id_rol; }
     public void setId_rol(Integer id_rol) { this.id_rol = id_rol; }
+
+    public Boolean isActivo() { return activo; }
+    public void setActivo(Boolean activo) { this.activo = activo; }
 }
