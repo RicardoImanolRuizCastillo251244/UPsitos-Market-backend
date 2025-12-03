@@ -1,12 +1,17 @@
 package org.example.repositories;
 
-import org.example.config.ConfigDB;
-import org.example.models.Notificacion;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.example.config.ConfigDB;
+import org.example.models.Notificacion;
 
 public class NotificacionRepository {
 
@@ -96,11 +101,12 @@ public class NotificacionRepository {
     }
 
     private Notificacion mapRowToNotificacion(ResultSet rs) throws SQLException {
+        Timestamp timestamp = rs.getTimestamp("fecha_envio");
         return new Notificacion(
                 rs.getInt("id"),
                 rs.getInt("id_usuario"),
                 rs.getString("mensaje"),
-                rs.getTimestamp("fecha_envio").toLocalDateTime(),
+                timestamp != null ? timestamp.toLocalDateTime() : null,
                 rs.getBoolean("leida"),
                 rs.getString("tipo")
         );
