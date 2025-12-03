@@ -7,7 +7,7 @@ public class Usuario {
     private int id_rol;
     private String nombre_usuario;
     private String correo_usuario;
-    private byte[] contrasena;
+    private String contrasena;
     private boolean activo;
     private LocalDateTime creado_en;
     private LocalDateTime actualizado_en;
@@ -62,11 +62,11 @@ public class Usuario {
         this.correo_usuario = correo_usuario;
     }
 
-    public byte[] getContrasena() {
+    public String getContrasena() {
         return contrasena;
     }
 
-    public void setContrasena(byte[] contrasena) {
+    public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
     }
 

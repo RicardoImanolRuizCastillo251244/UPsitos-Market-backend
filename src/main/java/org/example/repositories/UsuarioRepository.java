@@ -11,15 +11,17 @@ import java.util.Optional;
 public class UsuarioRepository {
 
     public Usuario save(Usuario usuario) throws SQLException {
-        String sql = "INSERT INTO USUARIO (id_rol, nombre_usuario, correo_usuario, contrasena, activo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO USUARIO (id_rol, nombre_usuario, correo_usuario, contrasena, activo, titular_cuenta, numero_cuenta) VALUES (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, usuario.getId_rol());
             pstmt.setString(2, usuario.getNombre_usuario());
             pstmt.setString(3, usuario.getCorreo_usuario());
-            pstmt.setBytes(4, usuario.getContrasena());
+            pstmt.setString(4, usuario.getContrasena());
             pstmt.setBoolean(5, usuario.isActivo());
+            pstmt.setString(6,usuario.getTitular_usuario());
+            pstmt.setString(7, usuario.getNumero_cuenta());
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -39,7 +41,7 @@ public class UsuarioRepository {
             pstmt.setInt(1, usuario.getId_rol());
             pstmt.setString(2, usuario.getNombre_usuario());
             pstmt.setString(3, usuario.getCorreo_usuario());
-            pstmt.setBytes(4, usuario.getContrasena());
+            pstmt.setString(4, usuario.getContrasena());
             pstmt.setBoolean(5, usuario.isActivo());
             pstmt.setInt(6, usuario.getId_usuario());
             pstmt.executeUpdate();
@@ -145,7 +147,7 @@ public class UsuarioRepository {
                 rs.getInt("id_rol"),
                 rs.getString("nombre_usuario"),
                 rs.getString("correo_usuario"),
-                rs.getBytes("contrasena"),
+                rs.getString("contrasena"),
                 rs.getBoolean("activo"),
                 rs.getTimestamp("creado_en").toLocalDateTime(),
                 actualizadoEnTimestamp != null ? actualizadoEnTimestamp.toLocalDateTime() : null,

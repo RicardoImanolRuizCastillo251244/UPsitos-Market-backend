@@ -1,13 +1,19 @@
 package org.example.repositories;
 
-import org.example.config.ConfigDB;
-import org.example.models.Publicacion;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.example.config.ConfigDB;
+import org.example.models.Publicacion;
 
 public class PublicacionRepository {
 
@@ -18,13 +24,24 @@ public class PublicacionRepository {
 
             pstmt.setString(1, pub.getTitulo_publicacion());
             pstmt.setString(2, pub.getDescripcion_publicacion());
-            pstmt.setBytes(3, pub.getFoto_publicacion());
-            if (pub.getFecha_expiracion() != null) {
-                pstmt.setTimestamp(4, Timestamp.valueOf(pub.getFecha_expiracion()));
+
+            if (pub.getFoto_publicacion() != null) {
+                pstmt.setBytes(3, pub.getFoto_publicacion());
             } else {
-                pstmt.setNull(4, Types.TIMESTAMP);
+                pstmt.setNull(3, Types.BINARY);
             }
+
+            // estado -> posicion 4
+            if (pub.getEstado_publicacion() != null) {
+                pstmt.setString(4, pub.getEstado_publicacion());
+            } else {
+                pstmt.setString(4, "ACTIVA");
+            }
+
+            // id_vendedor -> posicion 5
             pstmt.setInt(5, pub.getId_vendedor());
+
+            // precio_producto -> posicion 6
             pstmt.setFloat(6, pub.getPrecio_producto());
             if (pub.getId_categoria() != 0) {
                 pstmt.setInt(7, pub.getId_categoria());

@@ -57,7 +57,7 @@ public class UsuarioService {
 
         // Encriptar la contraseña
         String hashedPassword = Password.hash(plainPassword).withBcrypt().getResult();
-        usuario.setContrasena(hashedPassword.getBytes());
+        usuario.setContrasena(hashedPassword);
 
         try {
             return usuarioRepository.save(usuario);
@@ -76,9 +76,10 @@ public class UsuarioService {
         validateUsuario(usuario);
 
         if (plainPassword != null && !plainPassword.isEmpty()) {
+            System.out.println("La conytraseña es " + plainPassword);
             if (plainPassword.length() < 8) throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres.");
             String hashedPassword = Password.hash(plainPassword).withBcrypt().getResult();
-            usuario.setContrasena(hashedPassword.getBytes());
+            usuario.setContrasena(hashedPassword);
         }
 
         try {

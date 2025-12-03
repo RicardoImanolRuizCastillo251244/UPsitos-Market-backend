@@ -3,7 +3,7 @@ package org.example.models;
 import java.time.LocalDateTime;
 
 public class Publicacion {
-    private int id_publicacion;
+    private Integer id_publicacion;
     private String titulo_publicacion;
     private String descripcion_publicacion;
     private byte[] foto_publicacion;
@@ -32,11 +32,11 @@ public class Publicacion {
         this.existencia_publicacion = existencia_publicacion;
     }
 
-    public int getId_publicacion() {
+    public Integer getId_publicacion() {
         return id_publicacion;
     }
 
-    public void setId_publicacion(int id_publicacion) {
+    public void setId_publicacion(Integer id_publicacion) {
         this.id_publicacion = id_publicacion;
     }
 
@@ -88,19 +88,19 @@ public class Publicacion {
         this.estado_publicacion = estado_publicacion;
     }
 
-    public int getId_vendedor() {
+    public Integer getId_vendedor() {
         return id_vendedor;
     }
 
-    public void setId_vendedor(int id_vendedor) {
+    public void setId_vendedor(Integer id_vendedor) {
         this.id_vendedor = id_vendedor;
     }
 
-    public float getPrecio_producto() {
+    public Float getPrecio_producto() {
         return precio_producto;
     }
 
-    public void setPrecio_producto(float precio_producto) {
+    public void setPrecio_producto(Float precio_producto) {
         this.precio_producto = precio_producto;
     }
 
