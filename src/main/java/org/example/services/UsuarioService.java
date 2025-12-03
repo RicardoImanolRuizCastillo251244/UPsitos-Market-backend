@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.models.LoginDTO;
+import org.example.models.UpdateUsuarioDTO;
 import org.example.models.Usuario;
 import org.example.repositories.UsuarioRepository;
 import com.password4j.Password;
@@ -115,5 +116,43 @@ public class UsuarioService {
 
     public List<Usuario> findAll() throws Exception {
         return usuarioRepository.findAll();
+    }
+    public void updateUsuarioParcial(int idUsuarioObjetivo, UpdateUsuarioDTO dto, int idRolSolicitante) throws Exception {
+        Usuario usuario = usuarioRepository.findById(idUsuarioObjetivo)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+
+
+        if (dto.getNombre_usuario() != null && !dto.getNombre_usuario().isEmpty()) {
+            usuario.setNombre_usuario(dto.getNombre_usuario());
+        }
+
+        if (dto.getCorreo_usuario() != null && !dto.getCorreo_usuario().isEmpty()) {
+            usuario.setCorreo_usuario(dto.getCorreo_usuario());
+        }
+
+        if (dto.getNumero_cuenta() != null) {
+            usuario.setNumero_cuenta(dto.getNumero_cuenta());
+        }
+
+        if (dto.getTitular_usuario() != null) {
+            usuario.setTitular_usuario(dto.getTitular_usuario());
+        }
+
+        if (dto.getContrasena() != null && !dto.getContrasena().isEmpty()) {
+            if (dto.getContrasena().length() < 8) {
+                throw new IllegalArgumentException("La nueva contraseña debe tener al menos 8 caracteres.");
+            }
+            String hashedPassword = Password.hash(dto.getContrasena()).withBcrypt().getResult();
+            usuario.setContrasena(hashedPassword);
+        }
+
+        if (dto.getId_rol() != null && dto.getId_rol() > 0) {
+            if (idRolSolicitante == 3) { // Asumiendo que 3 es ADMIN
+                usuario.setId_rol(dto.getId_rol());
+            } else {
+            }
+        }
+
+        usuarioRepository.update(usuario);
     }
 }

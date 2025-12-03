@@ -160,4 +160,18 @@ public class UsuarioRepository {
         u.setTitular_usuario(rs.getString("titular_cuenta"));
         return u;
     }
+    public void updatePassword(int idUsuario, String nuevaContrasena) throws SQLException {
+        String sql = "UPDATE USUARIO SET contrasena = ?, actualizado_en = CURRENT_TIMESTAMP WHERE id_usuario = ?";
+        try (Connection conn = ConfigDB.getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nuevaContrasena);
+            pstmt.setInt(2, idUsuario);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("No se pudo actualizar la contraseña, usuario no encontrado.");
+            }
+        }
+    }
 }

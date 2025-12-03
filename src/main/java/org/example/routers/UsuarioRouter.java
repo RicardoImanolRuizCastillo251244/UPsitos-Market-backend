@@ -20,5 +20,5 @@ public class UsuarioRouter {
         app.get("/usuario", usuarioController::getAllUsuarios);
         app.get("/usuario/premium", usuarioController::getUsuariosConMembresiaPremium);
         app.get("/usuario/semi-premium", usuarioController::getUsuariosConMembresiaSemiPremium);
-    }
+        app.patch("/usuario/{id}", usuarioController::updateUsuarioGeneral);    }
 }

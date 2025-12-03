@@ -143,4 +143,36 @@ public class UsuarioController {
             ctx.status(500).result("Error al obtener los usuarios: " + e.getMessage());
         }
     }
+    public void updateUsuarioGeneral(Context ctx) {
+        try {
+            int targetUserId = Integer.parseInt(ctx.pathParam("id"));
+
+            String requesterIdStr = ctx.header("User-Id");
+            if (requesterIdStr == null) {
+                ctx.status(401).result("No autorizado.");
+                return;
+            }
+            int requesterId = Integer.parseInt(requesterIdStr);
+
+            Usuario solicitante = usuarioService.findById(requesterId)
+                    .orElseThrow(() -> new IllegalArgumentException("Solicitante no encontrado"));
+            int requesterRole = solicitante.getId_rol();
+
+            if (requesterRole != 3 && requesterId != targetUserId) { // 3 = Admin
+                ctx.status(403).result("No tienes permiso para editar a otro usuario.");
+                return;
+            }
+
+            org.example.models.UpdateUsuarioDTO dto = ctx.bodyAsClass(org.example.models.UpdateUsuarioDTO.class);
+
+            usuarioService.updateUsuarioParcial(targetUserId, dto, requesterRole);
+
+            ctx.status(200).json(Map.of("message", "Perfil actualizado correctamente."));
+
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (Exception e) {
+            ctx.status(500).result("Error al actualizar perfil: " + e.getMessage());
+        }
+    }
 }
