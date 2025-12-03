@@ -1,14 +1,19 @@
 package org.example.repositories;
 
-import org.example.config.ConfigDB;
-import org.example.models.CompraDTO;
-import org.example.models.Venta;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.example.config.ConfigDB;
+import org.example.models.CompraDTO;
+import org.example.models.Venta;
 
 public class VentaRepository {
 
@@ -95,8 +100,8 @@ public class VentaRepository {
                 publicacion.id_publicacion, publicacion.titulo_publicacion, publicacion.descripcion_publicacion, publicacion.foto_publicacion,
                 publicacion.precio_producto,
                 categoria.tipo,
-                vendedor.nombre_usuario, vendedor.numero_cuenta, vendedor.titular_cuenta,
-                comprador.nombre_usuario
+                vendedor.nombre_usuario AS vendedor_nombre, vendedor.numero_cuenta, vendedor.titular_cuenta,
+                comprador.nombre_usuario AS comprador_nombre
                 FROM VENTA venta
                 INNER JOIN PUBLICACION publicacion ON venta.id_publicacion = publicacion.id_publicacion
                 INNER JOIN USUARIO vendedor ON publicacion.id_vendedor = vendedor.id_usuario
@@ -167,10 +172,10 @@ public class VentaRepository {
                 rs.getBytes("foto_publicacion"),
                 rs.getDouble("precio_producto"),
                 rs.getString("tipo"),
-                rs.getString("nombre_usuario"),
+                rs.getString("vendedor_nombre"),
                 rs.getString("numero_cuenta"),
                 rs.getString("titular_cuenta"),
-                rs.getString("nombre_usuario")
+                rs.getString("comprador_nombre")
         );
     }
 
@@ -183,14 +188,14 @@ public class VentaRepository {
             publicacion.id_publicacion, publicacion.titulo_publicacion, publicacion.descripcion_publicacion, publicacion.foto_publicacion,
             publicacion.precio_producto,
             categoria.tipo,
-            vendedor.nombre_usuario, vendedor.numero_cuenta, vendedor.titular_cuenta,
-            comprador.nombre_usuario
+            vendedor.nombre_usuario AS vendedor_nombre, vendedor.numero_cuenta, vendedor.titular_cuenta,
+            comprador.nombre_usuario AS comprador_nombre
             FROM VENTA venta
             INNER JOIN PUBLICACION publicacion ON venta.id_publicacion = publicacion.id_publicacion
             INNER JOIN USUARIO vendedor ON publicacion.id_vendedor = vendedor.id_usuario
             INNER JOIN USUARIO comprador ON venta.id_comprador = comprador.id_usuario
             INNER JOIN CATEGORIA categoria ON publicacion.id_categoria = categoria.id_categoria
-            WHERE publicacion.id_vendedor = ?;"""; // <--- CAMBIO AQUÍ
+            WHERE publicacion.id_vendedor = ?;""";
 
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
