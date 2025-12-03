@@ -21,7 +21,7 @@ public class PublicacionController {
     }
 
     public void savePublicacion(Context ctx) {
-        Publicacion publicacion = null;
+        Publicacion publicacion;
         String mediaType = ctx.contentType();
 
         try {
