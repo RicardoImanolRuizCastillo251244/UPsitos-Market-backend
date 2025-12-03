@@ -1,17 +1,19 @@
 package org.example.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+
+import org.example.models.Publicacion;
+import org.example.services.PublicacionService;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
-import org.example.models.Publicacion;
-import org.example.services.PublicacionService;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
 
 public class PublicacionController {
     private final PublicacionService publicacionService;
@@ -188,6 +190,22 @@ public class PublicacionController {
         publicacion.setId_publicacion(id);
         publicacionService.updatePublicacion(publicacion);
         ctx.status(204);
+    }
+
+    public void updateEstadoPublicacion(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        String nuevoEstado = ctx.body();
+        
+        // Obtener la publicación actual
+        publicacionService.getPublicacionById(id).ifPresentOrElse(pub -> {
+            try {
+                pub.setEstado_publicacion(nuevoEstado);
+                publicacionService.updatePublicacion(pub);
+                ctx.status(200).json(pub);
+            } catch (SQLException e) {
+                ctx.status(500).result("Error al actualizar estado: " + e.getMessage());
+            }
+        }, () -> ctx.status(404).result("Publicación no encontrada"));
     }
 
     public void deletePublicacion(Context ctx) throws SQLException {

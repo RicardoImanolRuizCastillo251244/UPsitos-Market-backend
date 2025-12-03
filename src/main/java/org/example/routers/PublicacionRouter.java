@@ -1,7 +1,8 @@
 package org.example.routers;
 
-import io.javalin.Javalin;
 import org.example.controllers.PublicacionController;
+
+import io.javalin.Javalin;
 
 public class PublicacionRouter {
     private final PublicacionController publicacionController;
@@ -16,6 +17,7 @@ public class PublicacionRouter {
         app.get(basePath, publicacionController::getAllPublicaciones);
         app.get(basePath + "/{id}", publicacionController::getPublicacionById);
         app.put(basePath + "/{id}", publicacionController::updatePublicacion);
+        app.patch(basePath + "/{id}/estado", publicacionController::updateEstadoPublicacion);
         app.delete(basePath + "/{id}", publicacionController::deletePublicacion);
         app.get(basePath + "/categoria/{id_categoria}", publicacionController::getPublicacionesByCategoria);
         app.get(basePath + "/buscar", publicacionController::getPublicacionesByTitulo);
