@@ -34,8 +34,7 @@ public class UsuarioRepository {
     }
 
     public void update(Usuario usuario) throws SQLException {
-        String sql = "UPDATE USUARIO SET id_rol = ?, nombre_usuario = ?, correo_usuario = ?, contrasena = ?, activo = ?, actualizado_en = CURRENT_TIMESTAMP WHERE id_usuario = ?";
-        try (Connection conn = ConfigDB.getDataSource().getConnection();
+        String sql = "UPDATE USUARIO SET id_rol = ?, nombre_usuario = ?, correo_usuario = ?, contrasena = ?, activo = ?, titular_cuenta = ?, numero_cuenta = ?, actualizado_en = CURRENT_TIMESTAMP WHERE id_usuario = ?";        try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, usuario.getId_rol());
@@ -44,6 +43,9 @@ public class UsuarioRepository {
             pstmt.setString(4, usuario.getContrasena());
             pstmt.setBoolean(5, usuario.isActivo());
             pstmt.setInt(6, usuario.getId_usuario());
+            pstmt.setString(6, usuario.getTitular_usuario());
+            pstmt.setString(7, usuario.getNumero_cuenta());
+            pstmt.setInt(8, usuario.getId_usuario());
             pstmt.executeUpdate();
         }
     }
