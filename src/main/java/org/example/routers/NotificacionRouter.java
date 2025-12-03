@@ -16,6 +16,7 @@ public class NotificacionRouter {
         app.get(basePath, notificacionController::getAllNotificaciones);
         app.get(basePath + "/{id}", notificacionController::getNotificacionById);
         app.put(basePath + "/{id}", notificacionController::updateNotificacion);
+        app.put(basePath + "/{id}/leer", notificacionController::marcarComoLeida);
         app.delete(basePath + "/{id}", notificacionController::deleteNotificacion);
         app.get(basePath + "/usuario/{id_usuario}", notificacionController::getNotificacionesByUsuario);
     }

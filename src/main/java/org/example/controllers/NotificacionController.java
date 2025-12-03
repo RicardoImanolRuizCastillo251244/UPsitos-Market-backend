@@ -1,8 +1,9 @@
 package org.example.controllers;
 
-import io.javalin.http.Context;
 import org.example.models.Notificacion;
 import org.example.services.NotificacionService;
+
+import io.javalin.http.Context;
 
 public class NotificacionController {
     private final NotificacionService notificacionService;
@@ -88,6 +89,29 @@ public class NotificacionController {
             ctx.status(400).result(e.getMessage());
         } catch (Exception e) {
             ctx.status(500).result("Error al obtener las notificaciones del usuario: " + e.getMessage());
+        }
+    }
+
+    public void marcarComoLeida(Context ctx) {
+        try {
+            int id = parseId(ctx.pathParam("id"));
+            notificacionService.findById(id)
+                    .ifPresentOrElse(
+                            notificacion -> {
+                                try {
+                                    notificacion.setLeida(true);
+                                    notificacionService.update(notificacion);
+                                    ctx.status(204);
+                                } catch (Exception e) {
+                                    ctx.status(500).result("Error al actualizar la notificación: " + e.getMessage());
+                                }
+                            },
+                            () -> ctx.status(404).result("Notificación no encontrada.")
+                    );
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(e.getMessage());
+        } catch (Exception e) {
+            ctx.status(500).result("Error al marcar la notificación como leída: " + e.getMessage());
         }
     }
 }
