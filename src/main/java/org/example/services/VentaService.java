@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.models.CompraDTO;
 import org.example.models.Publicacion;
 import org.example.models.Venta;
 import org.example.repositories.PublicacionRepository;
@@ -76,5 +77,9 @@ public class VentaService {
 
     public List<Venta> findAll() throws Exception {
         return ventaRepository.findAll();
+    }
+
+    public List<CompraDTO> findAllCompras(int id) throws Exception{
+        return ventaRepository.findAllCompras(id);
     }
 }

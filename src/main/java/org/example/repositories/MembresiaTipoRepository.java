@@ -83,7 +83,8 @@ public class MembresiaTipoRepository {
         return new MembresiaTipo(
                 rs.getInt("id_membresia_tipo"),
                 rs.getFloat("precio"),
-                rs.getString("descripcion")
+                rs.getString("descripcion"),
+                rs.getString("nombre_membresia")
         );
     }
 }

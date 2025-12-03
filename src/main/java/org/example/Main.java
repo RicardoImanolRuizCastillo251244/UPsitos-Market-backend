@@ -34,5 +34,6 @@ public class Main {
         AppModule.initUsuarioBaneado().register(app);
         AppModule.initQuejaUsuario().register(app);
         AppModule.initQuejaVenta().register(app);
+        AppModule.initHoraEntrega().register(app);
     }
 }

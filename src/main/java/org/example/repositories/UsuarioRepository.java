@@ -151,8 +151,8 @@ public class UsuarioRepository {
                 rs.getBoolean("activo"),
                 rs.getTimestamp("creado_en").toLocalDateTime(),
                 actualizadoEnTimestamp != null ? actualizadoEnTimestamp.toLocalDateTime() : null,
-                rs.getString("titular_cuenta"),
-                rs.getString("numero_cuenta")
+                rs.getString("numero_cuenta"),
+                rs.getString("titular_cuenta")
         );
     }
 }

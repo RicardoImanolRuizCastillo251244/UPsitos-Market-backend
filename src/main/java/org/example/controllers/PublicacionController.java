@@ -8,6 +8,7 @@ import io.javalin.http.UploadedFile;
 import org.example.models.Publicacion;
 import org.example.services.PublicacionService;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
@@ -88,70 +89,38 @@ public class PublicacionController {
                 publicacion.setTitulo_publicacion(titulo);
                 publicacion.setDescripcion_publicacion(ctx.formParam("descripcion_publicacion"));
 
-                String idVendedorStr = ctx.formParam("id_vendedor");
-                if (idVendedorStr != null && !idVendedorStr.isEmpty()) {
-                    publicacion.setId_vendedor(Integer.parseInt(idVendedorStr));
+            publicacion.setId_categoria(Integer.parseInt(ctx.formParam("id_categoria")));
+
+            // Manejo de la imagen opcional
+            UploadedFile uploadedFile = ctx.uploadedFile("foto_publicacion");
+            if (uploadedFile != null) {
+
+                // Validar tipo MIME
+                String contentType = uploadedFile.contentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                    ctx.status(400).result("El archivo debe ser una imagen.");
+                    return;
                 }
 
-                String precioStr = ctx.formParam("precio_producto");
-                if (precioStr != null && !precioStr.isEmpty()) {
-                    publicacion.setPrecio_producto(Float.parseFloat(precioStr));
+                // Leer el InputStream SIEMPRE dentro de un try-with-resources
+                byte[] imagenBytes;
+                try (InputStream is = uploadedFile.content()) {
+                    imagenBytes = is.readAllBytes();
                 }
 
-                String idCategoriaStr = ctx.formParam("id_categoria");
-                if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
-                    publicacion.setId_categoria(Integer.parseInt(idCategoriaStr));
+                // Validar tamaño máximo (5MB)
+                if (imagenBytes.length > 5 * 1024 * 1024) {
+                    ctx.status(400).result("La imagen no debe superar los 5MB.");
+                    return;
                 }
 
-                String existenciaStr = ctx.formParam("existencia");
-                if (existenciaStr != null && !existenciaStr.isEmpty()) {
-                    publicacion.setExistencia(Integer.parseInt(existenciaStr));
-                }
-
-                // foto por multipart
-                UploadedFile uploaded = ctx.uploadedFile("foto_publicacion");
-                if (uploaded != null) {
-                    try (java.io.InputStream is = uploaded.content()) {
-                        byte[] bytes = is.readAllBytes();
-                        publicacion.setFoto_publicacion(bytes);
-                    } catch (Exception ex) {
-                        ctx.status(400).result("Error al leer la imagen: " + ex.getMessage());
-                        return;
-                    }
-                }
+                publicacion.setFoto_publicacion(imagenBytes);
             }
 
-            // Validaciones comunes
-            if (publicacion.getTitulo_publicacion() == null || publicacion.getTitulo_publicacion().isEmpty()) {
-                ctx.status(400).result("El título de la publicación no puede ser nulo o vacío.");
-                return;
-            }
-            if (publicacion.getId_vendedor() == null) {
-                ctx.status(400).result("El ID del vendedor no puede ser nulo o vacío.");
-                return;
-            }
-            if (publicacion.getPrecio_producto() == null) {
-                ctx.status(400).result("El precio del producto no puede ser nulo o vacío.");
-                return;
-            }
+            publicacion.setExistencia_publicacion(Integer.parseInt(ctx.formParam("existencia")));
 
-            if (publicacion.getEstado_publicacion() == null) {
-                publicacion.setEstado_publicacion("ACTIVA");
-            }
-            LocalDateTime ahora = LocalDateTime.now();
-            if (publicacion.getFecha_publicacion() == null) {
-                publicacion.setFecha_publicacion(ahora);
-            }
-            if (publicacion.getFecha_expiracion() == null) {
-                publicacion.setFecha_expiracion(ahora.plusDays(7));
-            }
-            if (publicacion.getExistencia() == null) {
-                publicacion.setExistencia(1);
-            }
-
-            Publicacion saved = publicacionService.savePublicacion(publicacion);
-            ctx.status(201).json(saved);
-
+            Publicacion savedPublicacion = publicacionService.savePublicacion(publicacion);
+            ctx.status(201).json(savedPublicacion);
         } catch (NumberFormatException e) {
             ctx.status(400).result("Error de formato en uno de los campos numéricos: " + e.getMessage());
         } catch (IllegalArgumentException e) {

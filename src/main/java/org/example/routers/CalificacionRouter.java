@@ -17,6 +17,6 @@ public class CalificacionRouter {
         app.get(basePath + "/{id}", calificacionController::getCalificacionById);
         app.put(basePath + "/{id}", calificacionController::updateCalificacion);
         app.delete(basePath + "/{id}", calificacionController::deleteCalificacion);
-        app.get(basePath + "/promedio/{id_publicacion}", calificacionController::getAverageRating);
+        app.get(basePath+"/promedio/{id_publicacion}", calificacionController::getAverageRating);
     }
 }

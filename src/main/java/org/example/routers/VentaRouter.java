@@ -18,5 +18,6 @@ public class VentaRouter {
         app.put(basePath + "/{id}", ventaController::updateVenta);
         app.delete(basePath + "/{id}", ventaController::deleteVenta);
         app.get(basePath + "/publicaciones-mas-vendidas", ventaController::getPublicacionesMasVendidas);
+        app.get("/compras/{id}",ventaController::getAllCompras);
     }
 }
