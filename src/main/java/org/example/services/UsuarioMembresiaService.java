@@ -27,17 +27,6 @@ public class UsuarioMembresiaService {
         }
     }
 
-    public UsuarioMembresia save(UsuarioMembresia um) throws Exception {
-        if (um.getFecha_inicio() == null) {
-            um.setFecha_inicio(LocalDateTime.now());
-        }
-        validateUsuarioMembresia(um);
-        try {
-            return umRepository.save(um);
-        } catch (SQLException e) {
-            throw new Exception("Error al guardar la membresía de usuario: " + e.getMessage(), e);
-        }
-    }
 
     public void update(UsuarioMembresia um) throws Exception {
         if (um.getId_usuario_membresia() <= 0) {
@@ -61,5 +50,19 @@ public class UsuarioMembresiaService {
 
     public List<UsuarioMembresia> findAll() throws Exception {
         return umRepository.findAll();
+    }
+
+    public UsuarioMembresia save(UsuarioMembresia um) throws Exception {
+        if (um.getFecha_inicio() == null) {
+            um.setFecha_inicio(LocalDateTime.now());
+        }
+        um.setFecha_expiracion(um.getFecha_inicio().plusDays(7));
+
+        validateUsuarioMembresia(um);
+        try {
+            return umRepository.save(um);
+        } catch (SQLException e) {
+            throw new Exception("Error al guardar la membresía de usuario: " + e.getMessage(), e);
+        }
     }
 }

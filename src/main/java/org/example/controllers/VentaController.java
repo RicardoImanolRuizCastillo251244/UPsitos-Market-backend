@@ -119,4 +119,13 @@ public class VentaController {
             ctx.status(500).result("Error al obtener las compras: " + e.getMessage());
         }
     }
+
+    public void getVentasByVendedor(Context ctx) {
+        try {
+            int id = ctx.pathParamAsClass("id", Integer.class).get();
+            ctx.status(200).json(ventaService.findVentasByVendedor(id));
+        } catch (Exception e) {
+            ctx.status(500).result("Error al obtener las ventas del vendedor: " + e.getMessage());
+        }
+    }
 }

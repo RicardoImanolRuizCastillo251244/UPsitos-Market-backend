@@ -82,4 +82,8 @@ public class VentaService {
     public List<CompraDTO> findAllCompras(int id) throws Exception{
         return ventaRepository.findAllCompras(id);
     }
+
+    public List<CompraDTO> findVentasByVendedor(int id) throws Exception {
+        return ventaRepository.findVentasByVendedor(id);
+    }
 }

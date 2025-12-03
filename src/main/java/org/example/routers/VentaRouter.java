@@ -19,5 +19,6 @@ public class VentaRouter {
         app.delete(basePath + "/{id}", ventaController::deleteVenta);
         app.get(basePath + "/publicaciones-mas-vendidas", ventaController::getPublicacionesMasVendidas);
         app.get("/compras/{id}",ventaController::getAllCompras);
+        app.get("/venta/vendedor/{id}", ventaController::getVentasByVendedor);
     }
 }

@@ -36,13 +36,6 @@ public class AppModule {
         return new UsuarioMembresiaRouter(umController);
     }
 
-    public static PublicacionRouter initPublicacion() {
-        PublicacionRepository publicacionRepository = new PublicacionRepository();
-        UsuarioMembresiaRepository umRepository = new UsuarioMembresiaRepository();
-        PublicacionService publicacionService = new PublicacionService(publicacionRepository);
-        PublicacionController publicacionController = new PublicacionController(publicacionService);
-        return new PublicacionRouter(publicacionController);
-    }
 
     public static VentaRouter initVenta() {
         VentaRepository ventaRepository = new VentaRepository();
@@ -105,4 +98,17 @@ public class AppModule {
         HoraEntregaRouter horaEntregaRouter  = new HoraEntregaRouter(horaEntregaController);
         return horaEntregaRouter;
     }
+    // En AppModule.java
+    public static PublicacionRouter initPublicacion() {
+        PublicacionRepository publicacionRepository = new PublicacionRepository();
+
+
+        UsuarioMembresiaRepository umRepository = new UsuarioMembresiaRepository();
+
+        PublicacionService publicacionService = new PublicacionService(publicacionRepository, umRepository);
+
+        PublicacionController publicacionController = new PublicacionController(publicacionService);
+        return new PublicacionRouter(publicacionController);
+    }
+
 }

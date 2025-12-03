@@ -173,4 +173,34 @@ public class VentaRepository {
                 rs.getString("nombre_usuario")
         );
     }
+
+
+    public List<CompraDTO> findVentasByVendedor(int id_vendedor) throws SQLException {
+        List<CompraDTO> ventas = new ArrayList<>();
+        String sql = """
+            SELECT venta.id, venta.cantidad_vendida, venta.fecha_venta, venta.precio_total, venta.hora_entrega,
+            venta.fecha_entrega,
+            publicacion.id_publicacion, publicacion.titulo_publicacion, publicacion.descripcion_publicacion, publicacion.foto_publicacion,
+            publicacion.precio_producto,
+            categoria.tipo,
+            vendedor.nombre_usuario, vendedor.numero_cuenta, vendedor.titular_cuenta,
+            comprador.nombre_usuario
+            FROM VENTA venta
+            INNER JOIN PUBLICACION publicacion ON venta.id_publicacion = publicacion.id_publicacion
+            INNER JOIN USUARIO vendedor ON publicacion.id_vendedor = vendedor.id_usuario
+            INNER JOIN USUARIO comprador ON venta.id_comprador = comprador.id_usuario
+            INNER JOIN CATEGORIA categoria ON publicacion.id_categoria = categoria.id_categoria
+            WHERE publicacion.id_vendedor = ?;"""; // <--- CAMBIO AQUÍ
+
+        try (Connection conn = ConfigDB.getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id_vendedor);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    ventas.add(mapRowToCompra(rs));
+                }
+            }
+            return ventas;
+        }
+    }
 }

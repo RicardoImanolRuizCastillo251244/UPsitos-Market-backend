@@ -1,7 +1,6 @@
 package org.example.repositories;
 
 import org.example.config.ConfigDB;
-import org.example.models.Usuario;
 import org.example.models.UsuarioMembresia;
 
 import java.sql.*;
@@ -10,9 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioMembresiaRepository {
-
-    private UsuarioRepository usuarioRepository = new UsuarioRepository();
-
 
     public UsuarioMembresia save(UsuarioMembresia um) throws SQLException {
         String sql = "INSERT INTO USUARIO_MEMBRESIA (id_usuario, id_membresia_tipo, fecha_inicio, fecha_expiracion, activa) VALUES (?, ?, ?, ?, ?)";
@@ -54,6 +50,17 @@ public class UsuarioMembresiaRepository {
         }
     }
 
+
+    public void updateEstado(int id, boolean activa) throws SQLException {
+        String sql = "UPDATE USUARIO_MEMBRESIA SET activa = ? WHERE id_usuario_membresia = ?";
+        try (Connection conn = ConfigDB.getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setBoolean(1, activa);
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+        }
+    }
+
     public void deleteById(int id) throws SQLException {
         String sql = "DELETE FROM USUARIO_MEMBRESIA WHERE id_usuario_membresia = ?";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
@@ -76,6 +83,7 @@ public class UsuarioMembresiaRepository {
         }
         return Optional.empty();
     }
+
 
     public Optional<UsuarioMembresia> findActiveByUserId(int id_usuario) throws SQLException {
         String sql = "SELECT * FROM USUARIO_MEMBRESIA WHERE id_usuario = ? AND activa = TRUE AND fecha_expiracion > NOW() ORDER BY fecha_expiracion DESC LIMIT 1";

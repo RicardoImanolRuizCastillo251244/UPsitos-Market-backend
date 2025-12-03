@@ -14,8 +14,10 @@ import java.util.Optional;
 
 import org.example.config.ConfigDB;
 import org.example.models.Publicacion;
+import org.example.repositories.UsuarioMembresiaRepository;
 
 public class PublicacionRepository {
+
 
     public Publicacion save(Publicacion pub) throws SQLException {
         String sql = "INSERT INTO PUBLICACION (titulo_publicacion, descripcion_publicacion, foto_publicacion, fecha_expiracion, id_vendedor, precio_producto, id_categoria, existencia_publicacion) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
@@ -229,5 +231,19 @@ public class PublicacionRepository {
                 rs.getInt("id_categoria"),
                 rs.getInt("existencia_publicacion")
         );
+    }
+
+    public int countActiveByVendedor(int id_vendedor) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM PUBLICACION WHERE id_vendedor = ? AND estado_publicacion = 'ACTIVA'";
+        try (Connection conn = ConfigDB.getDataSource().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id_vendedor);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
     }
 }
