@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.models.Publicacion;
 import org.example.models.QuejaVenta;
+import org.example.models.QuejaVentaDTO;
 import org.example.models.Venta;
 import org.example.repositories.PublicacionRepository;
 import org.example.repositories.QuejaVentaRepository;
@@ -72,5 +73,13 @@ public class QuejaVentaService {
 
     public List<QuejaVenta> findAll() throws Exception {
         return quejaRepository.findAll();
+    }
+
+    public List<QuejaVentaDTO> findAllWithDetails() throws Exception {
+        try {
+            return quejaRepository.findAllWithDetails();
+        } catch (SQLException e) {
+            throw new Exception("Error al obtener las quejas de venta con detalles: " + e.getMessage(), e);
+        }
     }
 }

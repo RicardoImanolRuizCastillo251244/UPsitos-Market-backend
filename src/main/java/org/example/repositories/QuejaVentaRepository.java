@@ -1,12 +1,19 @@
 package org.example.repositories;
 
-import org.example.config.ConfigDB;
-import org.example.models.QuejaVenta;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.example.config.ConfigDB;
+import org.example.models.QuejaVenta;
+import org.example.models.QuejaVentaDTO;
 
 public class QuejaVentaRepository {
 
@@ -99,5 +106,59 @@ public class QuejaVentaRepository {
                 rs.getString("tipo_problema"),
                 rs.getBytes("imagen")
         );
+    }
+
+    public List<QuejaVentaDTO> findAllWithDetails() throws SQLException {
+        List<QuejaVentaDTO> quejas = new ArrayList<>();
+        String sql = "SELECT " +
+                "qv.id, " +
+                "qv.id_emisor, " +
+                "u.nombre_usuario, " +
+                "u.correo_usuario, " +
+                "COALESCE(p.titulo_publicacion, 'Sin título') as titulo_publicacion, " +
+                "p.foto_publicacion, " +
+                "qv.descripcion_queja, " +
+                "qv.fecha_emision, " +
+                "qv.estado_queja, " +
+                "qv.tipo_problema, " +
+                "qv.id_venta " +
+                "FROM QUEJA_VENTA qv " +
+                "INNER JOIN USUARIO u ON qv.id_emisor = u.id_usuario " +
+                "LEFT JOIN VENTA v ON qv.id_venta = v.id " +
+                "LEFT JOIN PUBLICACION p ON v.id_publicacion = p.id_publicacion " +
+                "ORDER BY qv.fecha_emision DESC";
+        
+        try (Connection conn = ConfigDB.getDataSource().getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                QuejaVentaDTO dto = new QuejaVentaDTO();
+                dto.setId_queja(rs.getInt("id"));
+                dto.setId_usuario(rs.getInt("id_emisor"));
+                dto.setNombre_usuario(rs.getString("nombre_usuario"));
+                dto.setCorreo_usuario(rs.getString("correo_usuario"));
+                dto.setTitulo_publicacion(rs.getString("titulo_publicacion"));
+                dto.setDescripcion(rs.getString("descripcion_queja"));
+                
+                Timestamp fechaEmision = rs.getTimestamp("fecha_emision");
+                if (fechaEmision != null) {
+                    dto.setFecha_creacion(fechaEmision.toLocalDateTime());
+                }
+                
+                dto.setEstado(rs.getString("estado_queja"));
+                dto.setTipo_problema(rs.getString("tipo_problema"));
+                dto.setId_venta(rs.getInt("id_venta"));
+                
+                // Agregar foto de la publicación si existe
+                byte[] fotoPublicacion = rs.getBytes("foto_publicacion");
+                if (fotoPublicacion != null) {
+                    dto.addImagen(fotoPublicacion);
+                }
+                
+                quejas.add(dto);
+            }
+        }
+        return quejas;
     }
 }

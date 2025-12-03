@@ -99,7 +99,7 @@ public class QuejaUsuarioController {
 
     public void getAllQuejas(Context ctx) {
         try {
-            ctx.status(200).json(quejaService.findAll());
+            ctx.status(200).json(quejaService.findAllWithDetails());
         } catch (Exception e) {
             ctx.status(500).result("Error al obtener las quejas: " + e.getMessage());
         }

@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.models.QuejaUsuario;
+import org.example.models.QuejaUsuarioDTO;
 import org.example.repositories.QuejaUsuarioRepository;
 
 import java.sql.SQLException;
@@ -58,5 +59,13 @@ public class QuejaUsuarioService {
 
     public List<QuejaUsuario> findAll() throws Exception {
         return quejaRepository.findAll();
+    }
+
+    public List<QuejaUsuarioDTO> findAllWithDetails() throws Exception {
+        try {
+            return quejaRepository.findAllWithDetails();
+        } catch (SQLException e) {
+            throw new Exception("Error al obtener las quejas con detalles: " + e.getMessage(), e);
+        }
     }
 }

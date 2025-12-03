@@ -1,11 +1,10 @@
 package org.example.controllers;
 
-import io.javalin.http.Context;
-import io.javalin.http.UploadedFile;
 import org.example.models.QuejaVenta;
 import org.example.services.QuejaVentaService;
 
-import java.util.Optional;
+import io.javalin.http.Context;
+import io.javalin.http.UploadedFile;
 
 public class QuejaVentaController {
     private final QuejaVentaService quejaService;
@@ -99,7 +98,7 @@ public class QuejaVentaController {
 
     public void getAllQuejas(Context ctx) {
         try {
-            ctx.status(200).json(quejaService.findAll());
+            ctx.status(200).json(quejaService.findAllWithDetails());
         } catch (Exception e) {
             ctx.status(500).result("Error al obtener las quejas de venta: " + e.getMessage());
         }
