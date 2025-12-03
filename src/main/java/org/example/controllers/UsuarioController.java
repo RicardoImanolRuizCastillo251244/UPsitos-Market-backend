@@ -21,7 +21,7 @@ public class UsuarioController {
     public void register(Context ctx) {
         try {
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
-            String plainPassword = ctx.queryParam("password");
+            String plainPassword = usuario.getContrasena();
             int rol = usuario.getId_rol();
             System.out.println(rol);
             Usuario savedUsuario = usuarioService.registerUsuario(usuario, plainPassword);
