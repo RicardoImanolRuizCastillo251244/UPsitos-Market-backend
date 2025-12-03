@@ -10,14 +10,15 @@ public class Publicacion {
     private LocalDateTime fecha_publicacion;
     private LocalDateTime fecha_expiracion;
     private String estado_publicacion;
-    private Integer id_vendedor;
-    private Float precio_producto;
-    private Integer id_categoria;
-    private Integer existencia;
+    private int id_vendedor;
+    private float precio_producto;
+    private int id_categoria;
+    private int existencia_publicacion;
 
     public Publicacion() {
     }
-    public Publicacion(Integer id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, Integer id_vendedor, Float precio_producto, Integer id_categoria) {
+
+    public Publicacion(int id_publicacion, String titulo_publicacion, String descripcion_publicacion, byte[] foto_publicacion, LocalDateTime fecha_publicacion, LocalDateTime fecha_expiracion, String estado_publicacion, int id_vendedor, float precio_producto, int id_categoria, int existencia_publicacion) {
         this.id_publicacion = id_publicacion;
         this.titulo_publicacion = titulo_publicacion;
         this.descripcion_publicacion = descripcion_publicacion;
@@ -28,6 +29,7 @@ public class Publicacion {
         this.id_vendedor = id_vendedor;
         this.precio_producto = precio_producto;
         this.id_categoria = id_categoria;
+        this.existencia_publicacion = existencia_publicacion;
     }
 
     public Integer getId_publicacion() {
@@ -102,19 +104,19 @@ public class Publicacion {
         this.precio_producto = precio_producto;
     }
 
-    public Integer getId_categoria() {
+    public int getId_categoria() {
         return id_categoria;
     }
 
-    public void setId_categoria(Integer id_categoria) {
+    public void setId_categoria(int id_categoria) {
         this.id_categoria = id_categoria;
     }
 
-    public Integer getExistencia() {
-        return existencia;
+    public int getExistencia_publicacion() {
+        return existencia_publicacion;
     }
 
-    public void setExistencia(Integer existencia) {
-        this.existencia = existencia;
+    public void setExistencia_publicacion(int existencia_publicacion) {
+        this.existencia_publicacion = existencia_publicacion;
     }
 }

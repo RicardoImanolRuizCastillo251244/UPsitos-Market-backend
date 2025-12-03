@@ -11,13 +11,13 @@ public class Usuario {
     private boolean activo;
     private LocalDateTime creado_en;
     private LocalDateTime actualizado_en;
-    private String titular_usuario;
     private String numero_cuenta;
+    private String titular_cuenta;
 
     public Usuario() {
     }
 
-    public Usuario(int id_usuario, int id_rol, String nombre_usuario, String correo_usuario, String contrasena, boolean activo, LocalDateTime creado_en, LocalDateTime actualizado_en,  String titular_usuario, String numero_cuenta) {
+    public Usuario(int id_usuario, int id_rol, String nombre_usuario, String correo_usuario, String contrasena, boolean activo, LocalDateTime creado_en, LocalDateTime actualizado_en, String numero_cuenta, String titular_cuenta) {
         this.id_usuario = id_usuario;
         this.id_rol = id_rol;
         this.nombre_usuario = nombre_usuario;
@@ -26,8 +26,8 @@ public class Usuario {
         this.activo = activo;
         this.creado_en = creado_en;
         this.actualizado_en = actualizado_en;
-        this.titular_usuario = titular_usuario;
         this.numero_cuenta = numero_cuenta;
+        this.titular_cuenta = titular_cuenta;
     }
 
     public int getId_usuario() {
@@ -94,20 +94,21 @@ public class Usuario {
         this.actualizado_en = actualizado_en;
     }
 
-    public String getTitular_usuario() {
-        return titular_usuario;
-    }
-
-    public void setTitular_usuario(String titular_usuario) {
-        this.titular_usuario = titular_usuario;
-    }
-
     public String getNumero_cuenta() {
         return numero_cuenta;
     }
 
     public void setNumero_cuenta(String numero_cuenta) {
         this.numero_cuenta = numero_cuenta;
+    }
+
+    // Nombre esperado por el repositorio
+    public String getTitular_usuario() {
+        return titular_cuenta;
+    }
+
+    public void setTitular_usuario(String titular_cuenta) {
+        this.titular_cuenta = titular_cuenta;
     }
 
     @Override
@@ -121,6 +122,8 @@ public class Usuario {
                 ", activo=" + activo +
                 ", creado_en=" + creado_en +
                 ", actualizado_en=" + actualizado_en +
+                ", numero_cuenta='" + numero_cuenta + '\'' +
+                ", titular_cuenta='" + titular_cuenta + '\'' +
                 '}';
     }
 }
