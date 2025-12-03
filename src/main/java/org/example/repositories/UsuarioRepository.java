@@ -141,18 +141,23 @@ public class UsuarioRepository {
     }
 
     private Usuario mapRowToUsuario(ResultSet rs) throws SQLException {
+        Usuario u = new Usuario();
+        u.setId_usuario(rs.getInt("id_usuario"));
+        u.setId_rol(rs.getInt("id_rol"));
+        u.setNombre_usuario(rs.getString("nombre_usuario"));
+        u.setCorreo_usuario(rs.getString("correo_usuario"));
+        u.setContrasena(rs.getString("contrasena"));
+        u.setActivo(rs.getBoolean("activo"));
+        Timestamp creadoTs = rs.getTimestamp("creado_en");
+        if (creadoTs != null) {
+            u.setCreado_en(creadoTs.toLocalDateTime());
+        }
         Timestamp actualizadoEnTimestamp = rs.getTimestamp("actualizado_en");
-        return new Usuario(
-                rs.getInt("id_usuario"),
-                rs.getInt("id_rol"),
-                rs.getString("nombre_usuario"),
-                rs.getString("correo_usuario"),
-                rs.getString("contrasena"),
-                rs.getBoolean("activo"),
-                rs.getTimestamp("creado_en").toLocalDateTime(),
-                actualizadoEnTimestamp != null ? actualizadoEnTimestamp.toLocalDateTime() : null,
-                rs.getString("numero_cuenta"),
-                rs.getString("titular_cuenta")
-        );
+        if (actualizadoEnTimestamp != null) {
+            u.setActualizado_en(actualizadoEnTimestamp.toLocalDateTime());
+        }
+        u.setNumero_cuenta(rs.getString("numero_cuenta"));
+        u.setTitular_usuario(rs.getString("titular_cuenta"));
+        return u;
     }
 }
