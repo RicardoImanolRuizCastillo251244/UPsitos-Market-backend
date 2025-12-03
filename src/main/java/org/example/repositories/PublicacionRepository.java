@@ -20,7 +20,10 @@ public class PublicacionRepository {
 
 
     public Publicacion save(Publicacion pub) throws SQLException {
-        String sql = "INSERT INTO PUBLICACION (titulo_publicacion, descripcion_publicacion, foto_publicacion, fecha_expiracion, id_vendedor, precio_producto, id_categoria, existencia_publicacion) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+        // CORRECCIÓN 1: Se agregó 'estado_publicacion' a la lista de columnas
+        // CORRECCIÓN 2: Se ajustó el orden para que coincida con los '?'
+        String sql = "INSERT INTO PUBLICACION (titulo_publicacion, descripcion_publicacion, foto_publicacion, estado_publicacion, id_vendedor, precio_producto, id_categoria, existencia_publicacion, fecha_expiracion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -33,24 +36,36 @@ public class PublicacionRepository {
                 pstmt.setNull(3, Types.BINARY);
             }
 
-            // estado -> posicion 4
+            // Posición 4: estado_publicacion (ANTES estabas insertando esto en fecha_expiracion)
             if (pub.getEstado_publicacion() != null) {
                 pstmt.setString(4, pub.getEstado_publicacion());
             } else {
                 pstmt.setString(4, "ACTIVA");
             }
 
-            // id_vendedor -> posicion 5
+            // Posición 5: id_vendedor
             pstmt.setInt(5, pub.getId_vendedor());
 
-            // precio_producto -> posicion 6
+            // Posición 6: precio_producto
             pstmt.setFloat(6, pub.getPrecio_producto());
+
+            // Posición 7: id_categoria
             if (pub.getId_categoria() != 0) {
                 pstmt.setInt(7, pub.getId_categoria());
             } else {
                 pstmt.setNull(7, Types.INTEGER);
             }
+
+            // Posición 8: existencia_publicacion
             pstmt.setInt(8, pub.getExistencia_publicacion());
+
+            // Posición 9: fecha_expiracion (Se agregó manejo de nulos)
+            if (pub.getFecha_expiracion() != null) {
+                pstmt.setTimestamp(9, Timestamp.valueOf(pub.getFecha_expiracion()));
+            } else {
+                pstmt.setNull(9, Types.TIMESTAMP);
+            }
+
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {

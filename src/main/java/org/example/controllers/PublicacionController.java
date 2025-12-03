@@ -92,7 +92,25 @@ public class PublicacionController {
                 }
                 publicacion.setTitulo_publicacion(titulo);
                 publicacion.setDescripcion_publicacion(ctx.formParam("descripcion_publicacion"));
+                String precioStr = ctx.formParam("precio_producto");
+                if (precioStr != null && !precioStr.isEmpty()) {
+                    try {
+                        publicacion.setPrecio_producto(Float.parseFloat(precioStr));
+                    } catch (NumberFormatException ex) {
+                        ctx.status(400).result("El campo precio_producto debe ser numérico.");
+                        return;
+                    }
+                }
 
+                String idVendedorStr = ctx.formParam("id_vendedor");
+                if (idVendedorStr != null && !idVendedorStr.isEmpty()) {
+                    try {
+                        publicacion.setId_vendedor(Integer.parseInt(idVendedorStr));
+                    } catch (NumberFormatException ex) {
+                        ctx.status(400).result("El campo id_vendedor debe ser numérico.");
+                        return;
+                    }
+                }
                 String idCategoriaStr = ctx.formParam("id_categoria");
                 if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
                     try {
