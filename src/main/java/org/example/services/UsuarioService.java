@@ -98,8 +98,7 @@ public class UsuarioService {
         }
 
         // Verificar la contraseña con Password4j
-        boolean passwordVerified = Password.check(password, usuario.getContrasena()).withBcrypt();
-        if (passwordVerified) {
+        boolean passwordVerified = Password.check(password, usuario.getContrasena()).withBcrypt();        if (passwordVerified) {
             return usuario;
         } else {
             throw new LoginException("Credenciales inválidas.");
