@@ -1,12 +1,17 @@
 package org.example.models;
 
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ByteArraySerializer;
 
 public class Publicacion {
     private Integer id_publicacion;
     private String titulo_publicacion;
     private String descripcion_publicacion;
+    
+    @JsonSerialize(using = ByteArraySerializer.class)
     private byte[] foto_publicacion;
+    
     private LocalDateTime fecha_publicacion;
     private LocalDateTime fecha_expiracion;
     private String estado_publicacion;
