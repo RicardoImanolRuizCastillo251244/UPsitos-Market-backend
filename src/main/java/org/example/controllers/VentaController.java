@@ -23,6 +23,14 @@ public class VentaController {
             venta.setPrecio_total(Float.parseFloat(ctx.formParam("precio_total")));
             venta.setId_comprador(Integer.parseInt(ctx.formParam("id_comprador")));
 
+            // Manejo del tipo de pago
+            String tipoPago = ctx.formParam("tipo_pago");
+            if (tipoPago != null && !tipoPago.isEmpty()) {
+                venta.setTipo_pago(tipoPago);
+            } else {
+                venta.setTipo_pago("Desconocido"); // O lanza un error si es obligatorio
+            }
+
             // Manejo de la imagen opcional
             UploadedFile uploadedFile = ctx.uploadedFile("imagen");
             if (uploadedFile != null) {
