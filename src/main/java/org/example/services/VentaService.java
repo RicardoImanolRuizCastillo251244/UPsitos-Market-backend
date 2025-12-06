@@ -1,23 +1,27 @@
 package org.example.services;
 
-import org.example.models.CompraDTO;
-import org.example.models.Publicacion;
-import org.example.models.Venta;
-import org.example.repositories.PublicacionRepository;
-import org.example.repositories.VentaRepository;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.models.CompraDTO;
+import org.example.models.Notificacion;
+import org.example.models.Publicacion;
+import org.example.models.Venta;
+import org.example.repositories.NotificacionRepository;
+import org.example.repositories.PublicacionRepository;
+import org.example.repositories.VentaRepository;
+
 public class VentaService {
     private final VentaRepository ventaRepository;
     private final PublicacionRepository publicacionRepository;
+    private final NotificacionRepository notificacionRepository;
 
-    public VentaService(VentaRepository ventaRepository, PublicacionRepository publicacionRepository) {
+    public VentaService(VentaRepository ventaRepository, PublicacionRepository publicacionRepository, NotificacionRepository notificacionRepository) {
         this.ventaRepository = ventaRepository;
         this.publicacionRepository = publicacionRepository;
+        this.notificacionRepository = notificacionRepository;
     }
 
     private void validateVenta(Venta venta) {
@@ -55,7 +59,21 @@ public class VentaService {
         }
 
         try {
-            return ventaRepository.save(venta);
+            Venta ventaGuardada = ventaRepository.save(venta);
+            
+            // Notificar al vendedor
+            int idVendedor = publicacion.getId_vendedor();
+            String mensaje = "¡Felicidades! Has vendido tu producto \"" + publicacion.getTitulo_publicacion() + "\". Revisa los detalles de la venta.";
+            Notificacion notificacion = new Notificacion();
+            notificacion.setId_usuario(idVendedor);
+            notificacion.setMensaje(mensaje);
+            notificacion.setTipo("VENTA");
+            notificacion.setLeida(false);
+            notificacion.setFecha_envio(LocalDateTime.now());
+            
+            notificacionRepository.save(notificacion);
+            
+            return ventaGuardada;
         } catch (SQLException e) {
             throw new Exception("Error al guardar la venta: " + e.getMessage(), e);
         }

@@ -1,12 +1,17 @@
 package org.example.repositories;
 
-import org.example.config.ConfigDB;
-import org.example.models.Usuario;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.example.config.ConfigDB;
+import org.example.models.Usuario;
 
 public class UsuarioRepository {
 
@@ -139,6 +144,19 @@ public class UsuarioRepository {
                 usuarios.add(mapRowToUsuario(rs));
             }
             return usuarios;
+        }
+    }
+
+    public List<Usuario> findAdmins() throws SQLException {
+        String sql = "SELECT * FROM USUARIO WHERE id_rol = 1";
+        try (Connection conn = ConfigDB.getDataSource().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            List<Usuario> admins = new ArrayList<>();
+            while (rs.next()) {
+                admins.add(mapRowToUsuario(rs));
+            }
+            return admins;
         }
     }
 

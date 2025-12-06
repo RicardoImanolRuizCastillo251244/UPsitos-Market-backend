@@ -17,16 +17,21 @@ import org.example.models.QuejaUsuarioDTO;
 public class QuejaUsuarioRepository {
 
     public QuejaUsuario save(QuejaUsuario queja) throws SQLException {
-        String sql = "INSERT INTO QUEJA_USUARIO (id_emisor, id_receptor, descripcion_queja, estado_queja, motivo_queja, imagen) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO QUEJA_USUARIO (id_emisor, id_receptor, id_publicacion, descripcion_queja, estado_queja, motivo_queja, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, queja.getId_emisor());
             pstmt.setInt(2, queja.getId_receptor());
-            pstmt.setString(3, queja.getDescripcion_queja());
-            pstmt.setString(4, queja.getEstado_queja());
-            pstmt.setString(5, queja.getMotivo_queja());
-            pstmt.setBytes(6, queja.getImagen());
+            if (queja.getId_publicacion() > 0) {
+                pstmt.setInt(3, queja.getId_publicacion());
+            } else {
+                pstmt.setNull(3, java.sql.Types.INTEGER);
+            }
+            pstmt.setString(4, queja.getDescripcion_queja());
+            pstmt.setString(5, queja.getEstado_queja());
+            pstmt.setString(6, queja.getMotivo_queja());
+            pstmt.setBytes(7, queja.getImagen());
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -39,17 +44,22 @@ public class QuejaUsuarioRepository {
     }
 
     public void update(QuejaUsuario queja) throws SQLException {
-        String sql = "UPDATE QUEJA_USUARIO SET id_emisor = ?, id_receptor = ?, descripcion_queja = ?, estado_queja = ?, motivo_queja = ?, imagen = ? WHERE id = ?";
+        String sql = "UPDATE QUEJA_USUARIO SET id_emisor = ?, id_receptor = ?, id_publicacion = ?, descripcion_queja = ?, estado_queja = ?, motivo_queja = ?, imagen = ? WHERE id = ?";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, queja.getId_emisor());
             pstmt.setInt(2, queja.getId_receptor());
-            pstmt.setString(3, queja.getDescripcion_queja());
-            pstmt.setString(4, queja.getEstado_queja());
-            pstmt.setString(5, queja.getMotivo_queja());
-            pstmt.setBytes(6, queja.getImagen());
-            pstmt.setInt(7, queja.getId());
+            if (queja.getId_publicacion() > 0) {
+                pstmt.setInt(3, queja.getId_publicacion());
+            } else {
+                pstmt.setNull(3, java.sql.Types.INTEGER);
+            }
+            pstmt.setString(4, queja.getDescripcion_queja());
+            pstmt.setString(5, queja.getEstado_queja());
+            pstmt.setString(6, queja.getMotivo_queja());
+            pstmt.setBytes(7, queja.getImagen());
+            pstmt.setInt(8, queja.getId());
             pstmt.executeUpdate();
         }
     }
@@ -91,10 +101,12 @@ public class QuejaUsuarioRepository {
     }
 
     private QuejaUsuario mapRowToQuejaUsuario(ResultSet rs) throws SQLException {
+        int idPublicacion = rs.getInt("id_publicacion");
         return new QuejaUsuario(
                 rs.getInt("id"),
                 rs.getInt("id_emisor"),
                 rs.getInt("id_receptor"),
+                rs.wasNull() ? 0 : idPublicacion,
                 rs.getString("descripcion_queja"),
                 rs.getTimestamp("fecha_emision").toLocalDateTime(),
                 rs.getString("estado_queja"),

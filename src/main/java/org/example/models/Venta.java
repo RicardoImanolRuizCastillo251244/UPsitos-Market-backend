@@ -8,18 +8,20 @@ public class Venta {
     private int cantidad_vendida;
     private LocalDateTime fecha_venta;
     private float precio_total;
+    private String tipo_pago;
     private int id_comprador;
     private byte[] imagen;
 
     public Venta() {
     }
 
-    public Venta(int id, int id_publicacion, int cantidad_vendida, LocalDateTime fecha_venta, float precio_total, int id_comprador, byte[] imagen) {
+    public Venta(int id, int id_publicacion, int cantidad_vendida, LocalDateTime fecha_venta, float precio_total, String tipo_pago, int id_comprador, byte[] imagen) {
         this.id = id;
         this.id_publicacion = id_publicacion;
         this.cantidad_vendida = cantidad_vendida;
         this.fecha_venta = fecha_venta;
         this.precio_total = precio_total;
+        this.tipo_pago = tipo_pago;
         this.id_comprador = id_comprador;
         this.imagen = imagen;
     }
@@ -62,6 +64,14 @@ public class Venta {
 
     public void setPrecio_total(float precio_total) {
         this.precio_total = precio_total;
+    }
+
+    public String getTipo_pago() {
+        return tipo_pago;
+    }
+
+    public void setTipo_pago(String tipo_pago) {
+        this.tipo_pago = tipo_pago;
     }
 
     public int getId_comprador() {

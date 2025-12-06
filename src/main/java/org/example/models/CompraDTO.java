@@ -7,6 +7,8 @@ public class CompraDTO {
     private int cantidadVendida;
     private LocalDateTime fechaVenta;
     private double precioTotal;
+    private String tipoPago;
+    private byte[] imagenTransferencia;
     private LocalDateTime horaEntrega;
     private LocalDateTime fechaEntrega;
 
@@ -26,7 +28,7 @@ public class CompraDTO {
 
     public CompraDTO() {}
 
-    public CompraDTO(int idCompra, int cantidadVendida, LocalDateTime fechaVenta, double precioTotal, LocalDateTime horaEntrega,
+    public CompraDTO(int idCompra, int cantidadVendida, LocalDateTime fechaVenta, double precioTotal, String tipoPago, byte[] imagenTransferencia, LocalDateTime horaEntrega,
                      LocalDateTime fechaEntrega, int idPublicacion, String tituloPublicacion, String descripcionPublicacion, byte[] fotoPublicacion ,
                      double precioProducto, String categoria, String vendedorNombre, String vendedorNumeroCuenta,
                      String vendedorTitularCuenta, String compradorNombre) {
@@ -35,6 +37,8 @@ public class CompraDTO {
         this.fechaVenta = fechaVenta;
         this.idPublicacion = idPublicacion;
         this.precioTotal = precioTotal;
+        this.tipoPago = tipoPago;
+        this.imagenTransferencia = imagenTransferencia;
         this.horaEntrega = horaEntrega;
         this.fechaEntrega = fechaEntrega;
         this.tituloPublicacion = tituloPublicacion;
@@ -86,6 +90,22 @@ public class CompraDTO {
 
     public void setPrecioTotal(double precioTotal) {
         this.precioTotal = precioTotal;
+    }
+
+    public String getTipoPago() {
+        return tipoPago;
+    }
+
+    public void setTipoPago(String tipoPago) {
+        this.tipoPago = tipoPago;
+    }
+
+    public byte[] getImagenTransferencia() {
+        return imagenTransferencia;
+    }
+
+    public void setImagenTransferencia(byte[] imagenTransferencia) {
+        this.imagenTransferencia = imagenTransferencia;
     }
 
     public LocalDateTime getHoraEntrega() {

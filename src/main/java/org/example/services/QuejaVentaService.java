@@ -1,26 +1,35 @@
 package org.example.services;
 
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.example.models.Notificacion;
 import org.example.models.Publicacion;
 import org.example.models.QuejaVenta;
 import org.example.models.QuejaVentaDTO;
+import org.example.models.Usuario;
 import org.example.models.Venta;
+import org.example.repositories.NotificacionRepository;
 import org.example.repositories.PublicacionRepository;
 import org.example.repositories.QuejaVentaRepository;
+import org.example.repositories.UsuarioRepository;
 import org.example.repositories.VentaRepository;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 
 public class QuejaVentaService {
     private final QuejaVentaRepository quejaRepository;
     private final VentaRepository ventaRepository;
     private final PublicacionRepository publicacionRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final NotificacionRepository notificacionRepository;
 
-    public QuejaVentaService(QuejaVentaRepository quejaRepository, VentaRepository ventaRepository, PublicacionRepository publicacionRepository) {
+    public QuejaVentaService(QuejaVentaRepository quejaRepository, VentaRepository ventaRepository, PublicacionRepository publicacionRepository, UsuarioRepository usuarioRepository, NotificacionRepository notificacionRepository) {
         this.quejaRepository = quejaRepository;
         this.ventaRepository = ventaRepository;
         this.publicacionRepository = publicacionRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.notificacionRepository = notificacionRepository;
     }
 
     private void validateQueja(QuejaVenta queja) throws Exception {
@@ -48,7 +57,23 @@ public class QuejaVentaService {
             queja.setEstado_queja("ABIERTA");
         }
         try {
-            return quejaRepository.save(queja);
+            QuejaVenta quejaGuardada = quejaRepository.save(queja);
+            
+            // Notificar a todos los administradores
+            List<Usuario> admins = usuarioRepository.findAdmins();
+            String mensaje = "Nueva queja recibida sobre Venta. Revisar inmediatamente.";
+            
+            for (Usuario admin : admins) {
+                Notificacion notificacion = new Notificacion();
+                notificacion.setId_usuario(admin.getId_usuario());
+                notificacion.setMensaje(mensaje);
+                notificacion.setTipo("QUEJA_VENTA");
+                notificacion.setLeida(false);
+                notificacion.setFecha_envio(LocalDateTime.now());
+                notificacionRepository.save(notificacion);
+            }
+            
+            return quejaGuardada;
         } catch (SQLException e) {
             throw new Exception("Error al guardar la queja de venta: " + e.getMessage(), e);
         }

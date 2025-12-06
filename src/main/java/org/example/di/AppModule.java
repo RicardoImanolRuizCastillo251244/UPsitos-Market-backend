@@ -1,10 +1,54 @@
 package org.example.di;
 
-import org.example.controllers.*;
 import org.example.config.TokenManager;
-import org.example.repositories.*;
-import org.example.routers.*;
-import org.example.services.*;
+import org.example.controllers.CategoriaController;
+import org.example.controllers.HoraEntregaController;
+import org.example.controllers.MembresiaTipoController;
+import org.example.controllers.NotificacionController;
+import org.example.controllers.PublicacionController;
+import org.example.controllers.QuejaUsuarioController;
+import org.example.controllers.QuejaVentaController;
+import org.example.controllers.RolController;
+import org.example.controllers.UsuarioBaneadoController;
+import org.example.controllers.UsuarioController;
+import org.example.controllers.UsuarioMembresiaController;
+import org.example.controllers.VentaController;
+import org.example.repositories.CategoriaRepository;
+import org.example.repositories.HoraEntregaRepository;
+import org.example.repositories.MembresiaTipoRepository;
+import org.example.repositories.NotificacionRepository;
+import org.example.repositories.PublicacionRepository;
+import org.example.repositories.QuejaUsuarioRepository;
+import org.example.repositories.QuejaVentaRepository;
+import org.example.repositories.RolRepository;
+import org.example.repositories.UsuarioBaneadoRepository;
+import org.example.repositories.UsuarioMembresiaRepository;
+import org.example.repositories.UsuarioRepository;
+import org.example.repositories.VentaRepository;
+import org.example.routers.CategoriaRouter;
+import org.example.routers.HoraEntregaRouter;
+import org.example.routers.MembresiaTipoRouter;
+import org.example.routers.NotificacionRouter;
+import org.example.routers.PublicacionRouter;
+import org.example.routers.QuejaUsuarioRouter;
+import org.example.routers.QuejaVentaRouter;
+import org.example.routers.RolRouter;
+import org.example.routers.UsuarioBaneadoRouter;
+import org.example.routers.UsuarioMembresiaRouter;
+import org.example.routers.UsuarioRouter;
+import org.example.routers.VentaRouter;
+import org.example.services.CategoriaService;
+import org.example.services.HoraEntregaService;
+import org.example.services.MembresiaTipoService;
+import org.example.services.NotificacionService;
+import org.example.services.PublicacionService;
+import org.example.services.QuejaUsuarioService;
+import org.example.services.QuejaVentaService;
+import org.example.services.RolService;
+import org.example.services.UsuarioBaneadoService;
+import org.example.services.UsuarioMembresiaService;
+import org.example.services.UsuarioService;
+import org.example.services.VentaService;
 
 public class AppModule {
 
@@ -40,17 +84,10 @@ public class AppModule {
     public static VentaRouter initVenta() {
         VentaRepository ventaRepository = new VentaRepository();
         PublicacionRepository publicacionRepository = new PublicacionRepository();
-        VentaService ventaService = new VentaService(ventaRepository, publicacionRepository);
+        NotificacionRepository notificacionRepository = new NotificacionRepository();
+        VentaService ventaService = new VentaService(ventaRepository, publicacionRepository, notificacionRepository);
         VentaController ventaController = new VentaController(ventaService);
         return new VentaRouter(ventaController);
-    }
-
-    public static CalificacionRouter initCalificacion() {
-        CalificacionRepository calificacionRepository = new CalificacionRepository();
-        PublicacionRepository publicacionRepository = new PublicacionRepository();
-        CalificacionService calificacionService = new CalificacionService(calificacionRepository, publicacionRepository);
-        CalificacionController calificacionController = new CalificacionController(calificacionService);
-        return new CalificacionRouter(calificacionController);
     }
 
     public static CategoriaRouter initCategoria() {
@@ -77,7 +114,9 @@ public class AppModule {
 
     public static QuejaUsuarioRouter initQuejaUsuario() {
         QuejaUsuarioRepository quejaRepository = new QuejaUsuarioRepository();
-        QuejaUsuarioService quejaService = new QuejaUsuarioService(quejaRepository);
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        NotificacionRepository notificacionRepository = new NotificacionRepository();
+        QuejaUsuarioService quejaService = new QuejaUsuarioService(quejaRepository, usuarioRepository, notificacionRepository);
         QuejaUsuarioController quejaController = new QuejaUsuarioController(quejaService);
         return new QuejaUsuarioRouter(quejaController);
     }
@@ -86,7 +125,9 @@ public class AppModule {
         QuejaVentaRepository quejaVentaRepository = new QuejaVentaRepository();
         VentaRepository ventaRepository = new VentaRepository();
         PublicacionRepository publicacionRepository = new PublicacionRepository();
-        QuejaVentaService quejaVentaService = new QuejaVentaService(quejaVentaRepository, ventaRepository, publicacionRepository);
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        NotificacionRepository notificacionRepository = new NotificacionRepository();
+        QuejaVentaService quejaVentaService = new QuejaVentaService(quejaVentaRepository, ventaRepository, publicacionRepository, usuarioRepository, notificacionRepository);
         QuejaVentaController quejaVentaController = new QuejaVentaController(quejaVentaService);
         return new QuejaVentaRouter(quejaVentaController);
     }

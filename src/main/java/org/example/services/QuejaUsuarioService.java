@@ -1,18 +1,27 @@
 package org.example.services;
 
-import org.example.models.QuejaUsuario;
-import org.example.models.QuejaUsuarioDTO;
-import org.example.repositories.QuejaUsuarioRepository;
-
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.models.Notificacion;
+import org.example.models.QuejaUsuario;
+import org.example.models.QuejaUsuarioDTO;
+import org.example.models.Usuario;
+import org.example.repositories.NotificacionRepository;
+import org.example.repositories.QuejaUsuarioRepository;
+import org.example.repositories.UsuarioRepository;
+
 public class QuejaUsuarioService {
     private final QuejaUsuarioRepository quejaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final NotificacionRepository notificacionRepository;
 
-    public QuejaUsuarioService(QuejaUsuarioRepository quejaRepository) {
+    public QuejaUsuarioService(QuejaUsuarioRepository quejaRepository, UsuarioRepository usuarioRepository, NotificacionRepository notificacionRepository) {
         this.quejaRepository = quejaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.notificacionRepository = notificacionRepository;
     }
 
     private void validateQueja(QuejaUsuario queja) {
@@ -33,7 +42,24 @@ public class QuejaUsuarioService {
             queja.setEstado_queja("ABIERTA");
         }
         try {
-            return quejaRepository.save(queja);
+            QuejaUsuario quejaGuardada = quejaRepository.save(queja);
+            
+            // Notificar a todos los administradores
+            List<Usuario> admins = usuarioRepository.findAdmins();
+            String tipoQueja = (queja.getId_publicacion() > 0) ? "Publicación" : "Usuario";
+            String mensaje = "Nueva queja recibida sobre " + tipoQueja + ". Revisar inmediatamente.";
+            
+            for (Usuario admin : admins) {
+                Notificacion notificacion = new Notificacion();
+                notificacion.setId_usuario(admin.getId_usuario());
+                notificacion.setMensaje(mensaje);
+                notificacion.setTipo("QUEJA_USUARIO");
+                notificacion.setLeida(false);
+                notificacion.setFecha_envio(LocalDateTime.now());
+                notificacionRepository.save(notificacion);
+            }
+            
+            return quejaGuardada;
         } catch (SQLException e) {
             throw new Exception("Error al guardar la queja: " + e.getMessage(), e);
         }

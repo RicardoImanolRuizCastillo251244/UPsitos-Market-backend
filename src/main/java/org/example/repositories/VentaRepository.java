@@ -18,7 +18,7 @@ import org.example.models.Venta;
 public class VentaRepository {
 
     public Venta save(Venta venta) throws SQLException {
-        String sql = "INSERT INTO VENTA (id_publicacion, cantidad_vendida, fecha_venta, precio_total, id_comprador, imagen) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO VENTA (id_publicacion, cantidad_vendida, fecha_venta, precio_total, tipo_pago, id_comprador, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -26,8 +26,9 @@ public class VentaRepository {
             pstmt.setInt(2, venta.getCantidad_vendida());
             pstmt.setTimestamp(3, Timestamp.valueOf(venta.getFecha_venta()));
             pstmt.setFloat(4, venta.getPrecio_total());
-            pstmt.setInt(5, venta.getId_comprador());
-            pstmt.setBytes(6, venta.getImagen());
+            pstmt.setString(5, venta.getTipo_pago());
+            pstmt.setInt(6, venta.getId_comprador());
+            pstmt.setBytes(7, venta.getImagen());
             pstmt.executeUpdate();
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -40,7 +41,7 @@ public class VentaRepository {
     }
 
     public void update(Venta venta) throws SQLException {
-        String sql = "UPDATE VENTA SET id_publicacion = ?, cantidad_vendida = ?, fecha_venta = ?, precio_total = ?, id_comprador = ?, imagen = ? WHERE id = ?";
+        String sql = "UPDATE VENTA SET id_publicacion = ?, cantidad_vendida = ?, fecha_venta = ?, precio_total = ?, tipo_pago = ?, id_comprador = ?, imagen = ? WHERE id = ?";
         try (Connection conn = ConfigDB.getDataSource().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -48,9 +49,10 @@ public class VentaRepository {
             pstmt.setInt(2, venta.getCantidad_vendida());
             pstmt.setTimestamp(3, Timestamp.valueOf(venta.getFecha_venta()));
             pstmt.setFloat(4, venta.getPrecio_total());
-            pstmt.setInt(5, venta.getId_comprador());
-            pstmt.setBytes(6, venta.getImagen());
-            pstmt.setInt(7, venta.getId());
+            pstmt.setString(5, venta.getTipo_pago());
+            pstmt.setInt(6, venta.getId_comprador());
+            pstmt.setBytes(7, venta.getImagen());
+            pstmt.setInt(8, venta.getId());
             pstmt.executeUpdate();
         }
     }
@@ -95,7 +97,7 @@ public class VentaRepository {
     public List<CompraDTO> findAllCompras(int id_comprador) throws SQLException {
         List<CompraDTO> compras = new ArrayList<>();
         String sql = """
-                SELECT venta.id, venta.cantidad_vendida, venta.fecha_venta, venta.precio_total, venta.hora_entrega,
+                SELECT venta.id, venta.cantidad_vendida, venta.fecha_venta, venta.precio_total, venta.tipo_pago, venta.imagen, venta.hora_entrega,
                 venta.fecha_entrega,
                 publicacion.id_publicacion, publicacion.titulo_publicacion, publicacion.descripcion_publicacion, publicacion.foto_publicacion,
                 publicacion.precio_producto,
@@ -145,6 +147,7 @@ public class VentaRepository {
                 rs.getInt("cantidad_vendida"),
                 rs.getTimestamp("fecha_venta").toLocalDateTime(),
                 rs.getFloat("precio_total"),
+                rs.getString("tipo_pago"),
                 rs.getInt("id_comprador"),
                 rs.getBytes("imagen")
         );
@@ -164,6 +167,8 @@ public class VentaRepository {
                 rs.getInt("cantidad_vendida"),
                 fechaVenta,
                 rs.getDouble("precio_total"),
+                rs.getString("tipo_pago"),
+                rs.getBytes("imagen"),
                 horaEntrega,
                 fechaEntrega,
                 rs.getInt("id_publicacion"),
@@ -183,7 +188,7 @@ public class VentaRepository {
     public List<CompraDTO> findVentasByVendedor(int id_vendedor) throws SQLException {
         List<CompraDTO> ventas = new ArrayList<>();
         String sql = """
-            SELECT venta.id, venta.cantidad_vendida, venta.fecha_venta, venta.precio_total, venta.hora_entrega,
+            SELECT venta.id, venta.cantidad_vendida, venta.fecha_venta, venta.precio_total, venta.tipo_pago, venta.imagen, venta.hora_entrega,
             venta.fecha_entrega,
             publicacion.id_publicacion, publicacion.titulo_publicacion, publicacion.descripcion_publicacion, publicacion.foto_publicacion,
             publicacion.precio_producto,

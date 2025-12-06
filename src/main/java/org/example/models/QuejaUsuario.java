@@ -6,6 +6,7 @@ public class QuejaUsuario {
     private int id;
     private int id_emisor;
     private int id_receptor;
+    private int id_publicacion;
     private String descripcion_queja;
     private LocalDateTime fecha_emision;
     private String estado_queja;
@@ -15,10 +16,11 @@ public class QuejaUsuario {
     public QuejaUsuario() {
     }
 
-    public QuejaUsuario(int id, int id_emisor, int id_receptor, String descripcion_queja, LocalDateTime fecha_emision, String estado_queja, String motivo_queja, byte[] imagen) {
+    public QuejaUsuario(int id, int id_emisor, int id_receptor, int id_publicacion, String descripcion_queja, LocalDateTime fecha_emision, String estado_queja, String motivo_queja, byte[] imagen) {
         this.id = id;
         this.id_emisor = id_emisor;
         this.id_receptor = id_receptor;
+        this.id_publicacion = id_publicacion;
         this.descripcion_queja = descripcion_queja;
         this.fecha_emision = fecha_emision;
         this.estado_queja = estado_queja;
@@ -49,6 +51,14 @@ public class QuejaUsuario {
 
     public void setId_receptor(int id_receptor) {
         this.id_receptor = id_receptor;
+    }
+
+    public int getId_publicacion() {
+        return id_publicacion;
+    }
+
+    public void setId_publicacion(int id_publicacion) {
+        this.id_publicacion = id_publicacion;
     }
 
     public String getDescripcion_queja() {

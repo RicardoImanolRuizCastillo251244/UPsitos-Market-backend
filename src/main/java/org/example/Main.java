@@ -57,7 +57,6 @@ public class Main {
         AppModule.initUsuarioMembresia().register(app);
         AppModule.initPublicacion().register(app);
         AppModule.initVenta().register(app);
-        AppModule.initCalificacion().register(app);
         AppModule.initCategoria().register(app);
         AppModule.initNotificacion().register(app);
         AppModule.initUsuarioBaneado().register(app);
