@@ -17,6 +17,17 @@ public class QuejaVentaDTO {
     private String estado;
     private String tipo_problema;
     private int id_venta;
+    
+    // Información adicional para el administrador
+    private String tipo_pago;
+    private String imagen_comprobante_pago; // Base64 de la imagen de VENTA
+    private String imagen_evidencia_queja;  // Base64 de la imagen de QUEJA_VENTA
+    private String nombre_comprador;
+    private String correo_comprador;
+    private int id_comprador;
+    private String nombre_vendedor;
+    private String correo_vendedor;
+    private int id_vendedor;
 
     public QuejaVentaDTO() {
         this.imagenes = new ArrayList<>();
@@ -132,5 +143,78 @@ public class QuejaVentaDTO {
             String base64Image = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imagen);
             this.imagenes.add(base64Image);
         }
+    }
+
+    // Getters y Setters para campos adicionales
+    public String getTipo_pago() {
+        return tipo_pago;
+    }
+
+    public void setTipo_pago(String tipo_pago) {
+        this.tipo_pago = tipo_pago;
+    }
+
+    public String getImagen_comprobante_pago() {
+        return imagen_comprobante_pago;
+    }
+
+    public void setImagen_comprobante_pago(String imagen_comprobante_pago) {
+        this.imagen_comprobante_pago = imagen_comprobante_pago;
+    }
+
+    public String getImagen_evidencia_queja() {
+        return imagen_evidencia_queja;
+    }
+
+    public void setImagen_evidencia_queja(String imagen_evidencia_queja) {
+        this.imagen_evidencia_queja = imagen_evidencia_queja;
+    }
+
+    public String getNombre_comprador() {
+        return nombre_comprador;
+    }
+
+    public void setNombre_comprador(String nombre_comprador) {
+        this.nombre_comprador = nombre_comprador;
+    }
+
+    public String getCorreo_comprador() {
+        return correo_comprador;
+    }
+
+    public void setCorreo_comprador(String correo_comprador) {
+        this.correo_comprador = correo_comprador;
+    }
+
+    public int getId_comprador() {
+        return id_comprador;
+    }
+
+    public void setId_comprador(int id_comprador) {
+        this.id_comprador = id_comprador;
+    }
+
+    public String getNombre_vendedor() {
+        return nombre_vendedor;
+    }
+
+    public void setNombre_vendedor(String nombre_vendedor) {
+        this.nombre_vendedor = nombre_vendedor;
+    }
+
+    public String getCorreo_vendedor() {
+        return correo_vendedor;
+    }
+
+    public void setCorreo_vendedor(String correo_vendedor) {
+        this.correo_vendedor = correo_vendedor;
+    }
+
+    public int getId_vendedor() {
+        return id_vendedor;
+    }
+
+    public void setId_vendedor(int id_vendedor) {
+        this.id_vendedor = id_vendedor;
     }
 }

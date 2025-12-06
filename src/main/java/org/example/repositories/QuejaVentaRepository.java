@@ -113,19 +113,30 @@ public class QuejaVentaRepository {
         String sql = "SELECT " +
                 "qv.id, " +
                 "qv.id_emisor, " +
-                "u.nombre_usuario, " +
-                "u.correo_usuario, " +
+                "qv.imagen as imagen_queja, " +
+                "emisor.nombre_usuario as emisor_nombre, " +
+                "emisor.correo_usuario as emisor_correo, " +
                 "COALESCE(p.titulo_publicacion, 'Sin título') as titulo_publicacion, " +
                 "p.foto_publicacion, " +
                 "qv.descripcion_queja, " +
                 "qv.fecha_emision, " +
                 "qv.estado_queja, " +
                 "qv.tipo_problema, " +
-                "qv.id_venta " +
+                "qv.id_venta, " +
+                "v.tipo_pago, " +
+                "v.imagen as imagen_comprobante, " +
+                "v.id_comprador, " +
+                "comprador.nombre_usuario as comprador_nombre, " +
+                "comprador.correo_usuario as comprador_correo, " +
+                "p.id_vendedor, " +
+                "vendedor.nombre_usuario as vendedor_nombre, " +
+                "vendedor.correo_usuario as vendedor_correo " +
                 "FROM QUEJA_VENTA qv " +
-                "INNER JOIN USUARIO u ON qv.id_emisor = u.id_usuario " +
-                "LEFT JOIN VENTA v ON qv.id_venta = v.id " +
-                "LEFT JOIN PUBLICACION p ON v.id_publicacion = p.id_publicacion " +
+                "INNER JOIN USUARIO emisor ON qv.id_emisor = emisor.id_usuario " +
+                "INNER JOIN VENTA v ON qv.id_venta = v.id " +
+                "INNER JOIN PUBLICACION p ON v.id_publicacion = p.id_publicacion " +
+                "INNER JOIN USUARIO comprador ON v.id_comprador = comprador.id_usuario " +
+                "INNER JOIN USUARIO vendedor ON p.id_vendedor = vendedor.id_usuario " +
                 "ORDER BY qv.fecha_emision DESC";
         
         try (Connection conn = ConfigDB.getDataSource().getConnection();
@@ -136,8 +147,8 @@ public class QuejaVentaRepository {
                 QuejaVentaDTO dto = new QuejaVentaDTO();
                 dto.setId_queja(rs.getInt("id"));
                 dto.setId_usuario(rs.getInt("id_emisor"));
-                dto.setNombre_usuario(rs.getString("nombre_usuario"));
-                dto.setCorreo_usuario(rs.getString("correo_usuario"));
+                dto.setNombre_usuario(rs.getString("emisor_nombre"));
+                dto.setCorreo_usuario(rs.getString("emisor_correo"));
                 dto.setTitulo_publicacion(rs.getString("titulo_publicacion"));
                 dto.setDescripcion(rs.getString("descripcion_queja"));
                 
@@ -150,7 +161,36 @@ public class QuejaVentaRepository {
                 dto.setTipo_problema(rs.getString("tipo_problema"));
                 dto.setId_venta(rs.getInt("id_venta"));
                 
-                // Agregar foto de la publicación si existe
+                // Información de pago
+                dto.setTipo_pago(rs.getString("tipo_pago"));
+                
+                // Imagen del comprobante de pago (de VENTA)
+                byte[] imagenComprobante = rs.getBytes("imagen_comprobante");
+                if (imagenComprobante != null && imagenComprobante.length > 0) {
+                    String base64Comprobante = "data:image/jpeg;base64," + 
+                        java.util.Base64.getEncoder().encodeToString(imagenComprobante);
+                    dto.setImagen_comprobante_pago(base64Comprobante);
+                }
+                
+                // Imagen de evidencia de la queja (de QUEJA_VENTA)
+                byte[] imagenQueja = rs.getBytes("imagen_queja");
+                if (imagenQueja != null && imagenQueja.length > 0) {
+                    String base64Queja = "data:image/jpeg;base64," + 
+                        java.util.Base64.getEncoder().encodeToString(imagenQueja);
+                    dto.setImagen_evidencia_queja(base64Queja);
+                }
+                
+                // Información del comprador
+                dto.setId_comprador(rs.getInt("id_comprador"));
+                dto.setNombre_comprador(rs.getString("comprador_nombre"));
+                dto.setCorreo_comprador(rs.getString("comprador_correo"));
+                
+                // Información del vendedor
+                dto.setId_vendedor(rs.getInt("id_vendedor"));
+                dto.setNombre_vendedor(rs.getString("vendedor_nombre"));
+                dto.setCorreo_vendedor(rs.getString("vendedor_correo"));
+                
+                // Agregar foto de la publicación si existe (para contexto)
                 byte[] fotoPublicacion = rs.getBytes("foto_publicacion");
                 if (fotoPublicacion != null) {
                     dto.addImagen(fotoPublicacion);
